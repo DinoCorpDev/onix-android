@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -90,7 +91,11 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
 
 
         mBtn_solicitar_servicio.setOnClickListener(v -> {
-            Date currentTime = Calendar.getInstance().getTime();
+
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
+            String datetime = dateformat.format(c.getTime());
+
             mData_postular=FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
             mData_postular.removeValue();
             escucuchar_alertas();
@@ -113,7 +118,7 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
             registro.put("lat_destino", 0);
             registro.put("lng_destino", 0);
             registro.put("precio", mPrecio_total);
-            registro.put("create_date", currentTime);
+            registro.put("create_date", datetime);
             servicio.setValue(registro);
             Intent intent = new Intent(pantalla_pedir_servicio_uno.this, pantalla_esperando.class);
             startActivity(intent);

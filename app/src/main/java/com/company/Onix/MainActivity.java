@@ -22,6 +22,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences mPref;
@@ -43,68 +46,57 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Por varo verifica tu conexion a internet", Toast.LENGTH_LONG).show();
         }
 
-
         mBtn_ingresar = findViewById(R.id.btn_ingresar);
+        mBtn_ingresar.setOnClickListener(v -> {
 
-        mBtn_ingresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            ConnectivityManager connectivityManager1 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo1 = connectivityManager1.getActiveNetworkInfo();
 
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    startLocation();
-                } else {
-                    Toast.makeText(MainActivity.this, "Por favor  verifica tu conexion a internet", Toast.LENGTH_LONG).show();
-                }
-
-
-
-
-
+            if (networkInfo1 != null && networkInfo1.isConnected()) {
+                startLocation();
+            } else {
+                Toast.makeText(MainActivity.this, "Por favor  verifica tu conexion a internet", Toast.LENGTH_LONG).show();
             }
+
         });
     }
 
 
-    private void showAlertDialogoNOGPS(){
-        AlertDialog.Builder builder= new AlertDialog.Builder(this);
+    private void showAlertDialogoNOGPS() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Por favor activa tu ubicación de alta precisión para continuar")
                 .setPositiveButton("Configuraciòn", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),SETTINGS_REQUEST_CODE);
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), SETTINGS_REQUEST_CODE);
                     }
                 }).create().show();
     }
 
-    private boolean gpsActived(){
-        boolean isActive= false;
-        LocationManager locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
-            isActive= true;
+    private boolean gpsActived() {
+        boolean isActive = false;
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
+            isActive = true;
 
         }
         return isActive;
     }
 
-    private void startLocation(){
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
+    private void startLocation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                 iniciar_sistema();
-            }
-            else{
+            } else {
                 checkLocationPermissions();
             }
 
-        }else {
+        } else {
             if (gpsActived()) {
                 iniciar_sistema();
 
-            }
-            else {
+            } else {
                 showAlertDialogoNOGPS();
             }
         }
@@ -112,61 +104,60 @@ public class MainActivity extends AppCompatActivity {
 
     private void iniciar_sistema() {
 
-        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-        String pantalla=mPref.getString("pantalla","");
+        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+        String pantalla = mPref.getString("pantalla", "");
 
-        if(!pantalla.equals("")){
-            if(pantalla.equals("plataforma")){
+        if (!pantalla.equals("")) {
+            if (pantalla.equals("plataforma")) {
 
-                Intent intent=new Intent(MainActivity.this, plataforma.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent intent = new Intent(MainActivity.this, plataforma.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setAction(Intent.ACTION_RUN);
 
                 startActivity(intent);
             }
-            if (pantalla.equals("servicio")){
+            if (pantalla.equals("servicio")) {
 
-                Intent intent=new Intent(MainActivity.this, pantalla_servicio.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setAction(Intent.ACTION_RUN);
-
-                startActivity(intent);
-
-            }
-            if (pantalla.equals("registro")){
-
-                Intent intent=new Intent(MainActivity.this, pantalla_registro.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent intent = new Intent(MainActivity.this, pantalla_servicio.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.setAction(Intent.ACTION_RUN);
 
                 startActivity(intent);
 
             }
-        }else {
+            if (pantalla.equals("registro")) {
 
-            Intent intent =new Intent(MainActivity.this,verificacion.class);
+                Intent intent = new Intent(MainActivity.this, pantalla_registro.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setAction(Intent.ACTION_RUN);
+
+                startActivity(intent);
+
+            }
+        } else {
+
+            Intent intent = new Intent(MainActivity.this, verificacion.class);
             startActivity(intent);
         }
 
     }
 
-    private void checkLocationPermissions(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
+    private void checkLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(this).setTitle("Por favor proporciona los permisos de localizacion")
                         .setMessage("Esta aplicacion requiere de los permisos de ubicaciòn para poder utillizarse")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
                             }
                         })
                         .create()
                         .show();
-            }
-            else {
+            } else {
 
-                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }
         }
     }
@@ -182,9 +173,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
-
 
 
 }

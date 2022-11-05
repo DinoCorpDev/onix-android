@@ -73,7 +73,7 @@ public class login extends AppCompatActivity {
                             .child("usuarios")
                             .orderByChild("cuenta_login")
                             .equalTo(telefono + contra);
-                    ;
+
                     mquery.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

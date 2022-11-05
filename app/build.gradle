@@ -10,8 +10,8 @@ android {
         applicationId "com.company.Onix"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 22
-        versionName '3.8'
+        versionCode 23
+        versionName '3.9'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,10 +69,9 @@ dependencies {
 
     // autentificacion
    implementation platform('com.google.firebase:firebase-bom:28.0.1')
-
     implementation 'com.google.firebase:firebase-auth'
-
     implementation 'com.google.android.play:integrity:1.0.1'
+    implementation 'com.google.firebase:firebase-config'
 
 
 
