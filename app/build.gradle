@@ -4,14 +4,14 @@ plugins {
 
 android {
     compileSdkVersion 31
-    buildToolsVersion '30.0.3'
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.company.Onix"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 23
-        versionName '3.9'
+        versionCode 19
+        versionName "4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,9 +69,10 @@ dependencies {
 
     // autentificacion
    implementation platform('com.google.firebase:firebase-bom:28.0.1')
+
     implementation 'com.google.firebase:firebase-auth'
+
     implementation 'com.google.android.play:integrity:1.0.1'
-    implementation 'com.google.firebase:firebase-config'
 
 
 

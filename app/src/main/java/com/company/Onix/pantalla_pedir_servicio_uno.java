@@ -18,9 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.PrimitiveIterator;
 
@@ -90,38 +87,38 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
         }
 
 
-        mBtn_solicitar_servicio.setOnClickListener(v -> {
+        mBtn_solicitar_servicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
-            String datetime = dateformat.format(c.getTime());
+                mData_postular=FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
+                mData_postular.removeValue();
+                escucuchar_alertas();
+                //solicitar_el_servicio
+                DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
+                HashMap<String, Object> registro = new HashMap<>();
+                registro.put("nota", mExtra_nota);
+                registro.put("destino", mExtra_destino);
+                registro.put("modo", "moto");
+                registro.put("minutos", "0");
+                registro.put("kilometros", "0");
+                registro.put("descuento", 0);
+                registro.put("telefono_usuario", telefono_bd);
+                registro.put("telefono_conductor", "");
+                registro.put("estado", "esperando");
+                registro.put("nombre", nombre_bd);
+                registro.put("direccion", mExtra_origen);
+                registro.put("lat", mExtra_lat_origen);
+                registro.put("lng", mExta_lng_origen);
+                registro.put("lat_destino", 0);
+                registro.put("lng_destino", 0);
+                registro.put("precio", mPrecio_total);
+                servicio.setValue(registro);
 
-            mData_postular=FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
-            mData_postular.removeValue();
-            escucuchar_alertas();
-            //solicitar_el_servicio
-            DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
-            HashMap<String, Object> registro = new HashMap<>();
-            registro.put("nota", mExtra_nota);
-            registro.put("destino", mExtra_destino);
-            registro.put("modo", "moto");
-            registro.put("minutos", "0");
-            registro.put("kilometros", "0");
-            registro.put("descuento", 0);
-            registro.put("telefono_usuario", telefono_bd);
-            registro.put("telefono_conductor", "");
-            registro.put("estado", "esperando");
-            registro.put("nombre", nombre_bd);
-            registro.put("direccion", mExtra_origen);
-            registro.put("lat", mExtra_lat_origen);
-            registro.put("lng", mExta_lng_origen);
-            registro.put("lat_destino", 0);
-            registro.put("lng_destino", 0);
-            registro.put("precio", mPrecio_total);
-            registro.put("create_date", datetime);
-            servicio.setValue(registro);
-            Intent intent = new Intent(pantalla_pedir_servicio_uno.this, pantalla_esperando.class);
-            startActivity(intent);
+                Intent intent = new Intent(pantalla_pedir_servicio_uno.this, pantalla_esperando.class);
+
+                startActivity(intent);
+            }
         });
 
 

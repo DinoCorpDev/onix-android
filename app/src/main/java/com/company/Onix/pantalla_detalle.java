@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,7 +64,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
     private Double lat_conductor;
     private Double lng_conductor;
     private LatLng mOriginLatLng;
-    private  LatLng mPosicion_conductor;
+    private LatLng mPosicion_conductor;
 
 
     private String Extra_id;
@@ -71,13 +75,13 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     //mostrar_envios
     private String Extra_nombre;
-    private String  Extra_direccion;
+    private String Extra_direccion;
     private String Extra_km;
 
 
-    private  TextView mostrar_km;
-    private  TextView mostrar_nombre;
-    private  TextView mostrar_direccion;
+    private TextView mostrar_km;
+    private TextView mostrar_nombre;
+    private TextView mostrar_direccion;
 
     //referencia base de datos
 
@@ -87,7 +91,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
     private DatabaseReference mDatabase_tres;
 
     //traer_los_extra
-    private   double mExtra_lat_origen;
+    private double mExtra_lat_origen;
     private double mExta_lng_origen;
     private double mExtra_lat_destino;
     private double mExtra_lng_destino;
@@ -106,6 +110,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     private TextView mKm;
     private TextView mPrecio;
+    private int mPrecio_convertido = 0;
     private CircleImageView mBtn_atras_detalle;
 
     private Button mBtn_solicitar_servicio;
@@ -125,27 +130,34 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     private TextView mMi_bono;
 
-    private int bono_numero=0;
-    private int descuento=0;
+    private int bono_numero = 0;
+    private int descuento = 0;
 
 
-    private  TextView mPrecio_servicio_privado;
-    private  Button mBtn_solicitar_servicio_privado;
+    private TextView mPrecio_servicio_privado;
+    private Button mBtn_solicitar_servicio_privado;
+
+    private TextInputEditText mCliente_comentario;
+    private TextInputEditText mCliente_precio;
+
+    //Variable bono
+    private String mActivar_bono_detalle;
+    private LinearLayout mCuadro_bono;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_detalle);
-        progressDialog=new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Calculando tarifa por favor espere");
         progressDialog.show();
         // seguridad del conductor variables locales
-        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-        String ciudad=mPref.getString("mi_ciudad","");
-        String telefono_bd=mPref.getString("telefono","");
-        String nombre_bd=mPref.getString("nombre","");
-        mCiudad=ciudad;
+        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+        String ciudad = mPref.getString("mi_ciudad", "");
+        String telefono_bd = mPref.getString("telefono", "");
+        String nombre_bd = mPref.getString("nombre", "");
+        mCiudad = ciudad;
         mGoogleApiProvider = new GoogleApiProvider(pantalla_detalle.this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -153,38 +165,44 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
 
 
+        mBase_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
 
-        mBase_servidor=FirebaseDatabase.getInstance().getReference().child("a_servidor");
+        mMi_bono = findViewById(R.id.mi_bono);
 
-        mMi_bono=findViewById(R.id.mi_bono);
-
-        if(telefono_bd.equals("")|| telefono_bd==null){
+        if (telefono_bd.equals("") || telefono_bd == null) {
             progressDialog.dismiss();
-            Intent intent=new Intent(pantalla_detalle.this, pantalla_principal.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Intent intent = new Intent(pantalla_detalle.this, pantalla_principal.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
 
             startActivity(intent);
 
-        }else {
-            mTelefono_conductor=telefono_bd;
+        } else {
+            mTelefono_conductor = telefono_bd;
 
 
-            mData_usuario_detalle=FirebaseDatabase.getInstance().getReference().child("a_servidor");
+            mData_usuario_detalle = FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(telefono_bd);
             mData_usuario_detalle.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        if(snapshot.hasChild("a_bono")){
-                            String bono=snapshot.child("a_bono").getValue().toString();
-                            bono_numero=Integer.parseInt(bono);
+                    if (snapshot.exists()) {
+                        if (snapshot.hasChild("nuevo_bono")) {
+                            String bono = snapshot.child("nuevo_bono").getValue().toString();
+                            bono_numero = Integer.parseInt(bono);
                             mMi_bono.setText(bono);
-                            if(bono_numero>=0){
-                                descuento=0;
+
+                            if (mActivar_bono_detalle.equals("si")) {
+                                if (bono_numero >= 1000) {
+                                    descuento = 1000;
+                                } else {
+                                    descuento = 0;
+                                }
+                            } else {
+                                descuento = 0;
                             }
 
 
-                        }else {
+                        } else {
                             //no hay
 
                         }
@@ -198,29 +216,31 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
             });
 
 
-
-
-
-
-
-
-
-            mBtn_atras_detalle=findViewById(R.id.boton_atras_detalle);
-            mOrigen_detalle=findViewById(R.id.origen_detalle);
-            mDestino_detalle=findViewById(R.id.destino_detalle);
-            mKm=findViewById(R.id.minutos_distancia);
-            mPrecio=findViewById(R.id.precio);
-            mExtra_origen=getIntent().getStringExtra("origin");
-            mExtra_destino=getIntent().getStringExtra("destination");
+            mCliente_comentario = findViewById(R.id.cliente_comentario);
+            mCliente_precio = findViewById(R.id.cliente_precio);
+            mBtn_atras_detalle = findViewById(R.id.boton_atras_detalle);
+            mOrigen_detalle = findViewById(R.id.origen_detalle);
+            mDestino_detalle = findViewById(R.id.destino_detalle);
+            mKm = findViewById(R.id.minutos_distancia);
+            mPrecio = findViewById(R.id.precio);
+            mCuadro_bono = findViewById(R.id.cuadro_bono);
+            mExtra_origen = getIntent().getStringExtra("origin");
+            mExtra_destino = getIntent().getStringExtra("destination");
             mExtra_lat_origen = getIntent().getDoubleExtra("origin_lat", 0);
             mExta_lng_origen = getIntent().getDoubleExtra("origin_lng", 0);
             mExtra_lat_destino = getIntent().getDoubleExtra("destination_lat", 0);
             mExtra_lng_destino = getIntent().getDoubleExtra("destination_lng", 0);
+            mActivar_bono_detalle = getIntent().getStringExtra("activar_bono");
+
+            if (mActivar_bono_detalle.equals("si")) {
+                mCuadro_bono.setVisibility(View.VISIBLE);
+            } else {
+                mCuadro_bono.setVisibility(View.INVISIBLE);
+            }
 
 
-
-            mOriginLatLng=new LatLng(mExtra_lat_origen,mExta_lng_origen);
-            mPosicion_conductor=new LatLng(mExtra_lat_destino,mExtra_lng_destino);
+            mOriginLatLng = new LatLng(mExtra_lat_origen, mExta_lng_origen);
+            mPosicion_conductor = new LatLng(mExtra_lat_destino, mExtra_lng_destino);
 
 
             Location locationA = new Location("punto A");
@@ -234,64 +254,79 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
             locationB.setLongitude(mPosicion_conductor.longitude);
 
             float distance = locationA.distanceTo(locationB);
-
-            float operacion=distance/1000;
-
-
-
-
+            float operacion = distance / 1000;
 
             mOrigen_detalle.setText(mExtra_origen);
             mDestino_detalle.setText(mExtra_destino);
-            mBtn_solicitar_servicio=findViewById(R.id.btn_solicitar_servicio);
+            mBtn_solicitar_servicio = findViewById(R.id.btn_solicitar_servicio);
 
 
+            mBtn_solicitar_servicio.setOnClickListener(v -> {
+                String precio_letra = mCliente_precio.getText().toString();
+                String comentario = mCliente_comentario.getText().toString();
+                if (precio_letra.equals("")) {
+                    mCliente_precio.requestFocus();
+                    Toast.makeText(pantalla_detalle.this, "Por favor ofrezca su tarifa", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (mPrecio_convertido != 0) {
+                        int precio_cliente = Integer.parseInt(precio_letra);
+                        if (precio_cliente < mPrecio_convertido) {
+                            mCliente_precio.setText(mPrecio_moto_total);
+                            Toast.makeText(pantalla_detalle.this, "El precio minimo para este servicio es de " + mPrecio_convertido + " cop", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (mExtra_destino != null && telefono_bd != null && nombre_bd != null && mExtra_origen != null && mExtra_lat_origen != 0 && mExta_lng_origen != 0 && mExtra_lat_destino != 0 && mExtra_lng_destino != 0 && mPrecio != null) {
+                                mData_postular = FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
+                                mData_postular.removeValue();
+                                escucuchar_alertas();
+                                //solicitar_el_servicio
+                                String fecha = Utiles.obtenerFechaActual("America/Mexico_City");
+                                String hora = Utiles.obtenerHoraActual("America/Mexico_City");
+                                String[] parts = fecha.split("-");
+                                String dia_texto = parts[2];
+                                String mes_texto = parts[1];
+                                String ano_texto = parts[0];
+
+                                //Add create date sebas
+                                Calendar c = Calendar.getInstance();
+                                SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
+                                String datetime = dateformat.format(c.getTime());
+                                //End create date sebas
+
+                                DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
+                                HashMap<String, Object> registro = new HashMap<>();
+                                registro.put("nota", comentario);
+                                registro.put("destino", mExtra_destino);
+                                registro.put("modo", "moto");
+                                registro.put("minutos", mMinutos);
+                                registro.put("kilometros", mKilometros);
+                                registro.put("descuento", descuento);
+                                registro.put("telefono_usuario", telefono_bd);
+                                registro.put("fecha", dia_texto + "/" + mes_texto + "/" + ano_texto + " - " + hora);
+                                registro.put("telefono_conductor", "");
+                                registro.put("estado", "esperando");
+                                registro.put("nombre", nombre_bd);
+                                registro.put("direccion", mExtra_origen);
+                                registro.put("lat", mExtra_lat_origen);
+                                registro.put("lng", mExta_lng_origen);
+                                registro.put("lat_destino", mExtra_lat_destino);
+                                registro.put("lng_destino", mExtra_lng_destino);
+                                registro.put("precio", precio_letra);
+                                registro.put("create_date", datetime);
+                                servicio.setValue(registro);
+                                Intent intent = new Intent(pantalla_detalle.this, pantalla_esperando.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(pantalla_detalle.this, "No se cargo bien la información", Toast.LENGTH_SHORT).show();
+                            }
 
 
-
-
-            mBtn_solicitar_servicio.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (mExtra_destino != null && telefono_bd != null && nombre_bd != null && mExtra_origen != null && mExtra_lat_origen != 0 && mExta_lng_origen != 0 && mExtra_lat_destino != 0 && mExtra_lng_destino != 0 && mPrecio != null) {
-
-                        mData_postular = FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
-                        mData_postular.removeValue();
-
-                        escucuchar_alertas();
-                        //solicitar_el_servicio
-                        DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
-                        HashMap<String, Object> registro = new HashMap<>();
-                        registro.put("nota", "necesito una moto");
-                        registro.put("destino", mExtra_destino);
-                        registro.put("modo", "moto");
-                        registro.put("minutos", mMinutos);
-                        registro.put("kilometros", mKilometros);
-                        registro.put("descuento", 0);
-                        registro.put("telefono_usuario", telefono_bd);
-                        registro.put("telefono_conductor", "");
-                        registro.put("estado", "esperando");
-                        registro.put("nombre", nombre_bd);
-                        registro.put("direccion", mExtra_origen);
-                        registro.put("lat", mExtra_lat_origen);
-                        registro.put("lng", mExta_lng_origen);
-                        registro.put("lat_destino", mExtra_lat_destino);
-                        registro.put("lng_destino", mExtra_lng_destino);
-                        registro.put("precio", mPrecio_moto_total);
-                        servicio.setValue(registro);
-
-                        Intent intent = new Intent(pantalla_detalle.this, pantalla_esperando.class);
-
-                        startActivity(intent);
-
-
-                    }else {
-                        Toast.makeText(pantalla_detalle.this, "No se cargo bien la información", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
 
+                }
+
+
+            });
 
 
             mBtn_atras_detalle.setOnClickListener(new View.OnClickListener() {
@@ -302,15 +337,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
             });
 
 
-
         }
-
-
-
-
-
-
-
 
 
     }
@@ -321,8 +348,6 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
 
     }
-
-
 
 
     private void drawRoute() {
@@ -367,13 +392,11 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                         String[] durationAndMins = durationText.split(" ");
                         double durationValue = Double.parseDouble(durationAndMins[0]);
 
-                        mKilometros=distanceText;
-                        mMinutos=durationText;
+                        mKilometros = distanceText;
+                        mMinutos = durationText;
 
                         mKm.setText(durationText + " " + distanceText);
                         calculatePrice(distanceValue, durationValue);
-
-
 
 
                         if (mOriginLatLng.latitude > mPosicion_conductor.latitude && mOriginLatLng.longitude > mPosicion_conductor.longitude) {
@@ -408,7 +431,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
                 }
             });
-        }else{
+        } else {
             Toast.makeText(this, "problema con las varibles de ruta iniciar", Toast.LENGTH_SHORT).show();
         }
 
@@ -418,57 +441,52 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
         mBase_servidor.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     double precio_base = snapshot.child("a_precio_base").getValue().hashCode();
                     double precio_km = snapshot.child("a_precio_km").getValue().hashCode();
                     double precio_minutos = snapshot.child("a_precio_minuto").getValue().hashCode();
                     double precio_minimo = snapshot.child("a_precio_minimo").getValue().hashCode();
 
-                    double precio_km_carro=snapshot.child("a_precio_km_carro").getValue().hashCode();
-                    double precio_base_carro=snapshot.child("a_precio_base_carro").getValue().hashCode();
-                    double precio_minimo_carro=snapshot.child("a_precio_minimo_carro").getValue().hashCode();
+                    double precio_km_carro = snapshot.child("a_precio_km_carro").getValue().hashCode();
+                    double precio_base_carro = snapshot.child("a_precio_base_carro").getValue().hashCode();
+                    double precio_minimo_carro = snapshot.child("a_precio_minimo_carro").getValue().hashCode();
 
 
-                    double operacion_suma_km=precio_km*distanceValue;
-                    double operacion_suna_minutos=precio_minutos*durationValue;
-                    double operacion_suma_total=operacion_suma_km+operacion_suna_minutos+precio_base;
+                    double operacion_suma_km = precio_km * distanceValue;
+                    double operacion_suna_minutos = precio_minutos * durationValue;
+                    double operacion_suma_total = operacion_suma_km + operacion_suna_minutos + precio_base;
 
 
-                    double operacion_suma_km_carro=precio_km_carro*distanceValue;
-                    double precio_carro=operacion_suma_km_carro+precio_base_carro;
+                    double operacion_suma_km_carro = precio_km_carro * distanceValue;
+                    double precio_carro = operacion_suma_km_carro + precio_base_carro;
 
-                    if(distanceValue<=3 ){
-                        operacion_suma_total=precio_minimo;
-                        precio_carro=precio_minimo_carro;
+                    if (distanceValue <= 3) {
+                        operacion_suma_total = precio_minimo;
+                        precio_carro = precio_minimo_carro;
                     }
-                    if(operacion_suma_total<=precio_minimo){
-                        operacion_suma_total=precio_minimo;
+                    if (operacion_suma_total <= precio_minimo) {
+                        operacion_suma_total = precio_minimo;
 
-                    }
-
-                    if(precio_carro<=4800){
-                        precio_carro=precio_minimo_carro;
                     }
 
-
-                    int precio_moto=(int)operacion_suma_total;
-                    int precio_descuento=precio_moto-descuento;
-
-
+                    if (precio_carro <= 4800) {
+                        precio_carro = precio_minimo_carro;
+                    }
 
 
-
-                    int convertir_precio_carro=(int)precio_carro;
-
-
-
-                    mPrecio_moto_total=String.valueOf(precio_moto);
-                    mPrecio_carro_total=String.valueOf(convertir_precio_carro);
+                    int precio_moto = (int) operacion_suma_total;
+                    int precio_descuento = precio_moto - descuento;
 
 
+                    int convertir_precio_carro = (int) precio_carro;
 
 
-                    mPrecio.setText(String.valueOf(precio_moto)+" COP");
+                    mPrecio_moto_total = String.valueOf(precio_moto);
+                    mPrecio_carro_total = String.valueOf(convertir_precio_carro);
+
+
+                    mPrecio.setText(String.valueOf(precio_moto) + " COP");
+                    mPrecio_convertido = precio_moto;
 
 
                     progressDialog.dismiss();
@@ -496,14 +514,16 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
 
     }
-    private void escucuchar_alertas(){
-        Intent serviceIntent= new Intent(this, servicio_pantallas.class);
-        ContextCompat.startForegroundService(pantalla_detalle.this,serviceIntent);
+
+    private void escucuchar_alertas() {
+        Intent serviceIntent = new Intent(this, servicio_pantallas.class);
+        ContextCompat.startForegroundService(pantalla_detalle.this, serviceIntent);
 
     }
-    private void parar_alertas(){
 
-        Intent serviceIntent= new Intent(this, servicio_pantallas.class);
+    private void parar_alertas() {
+
+        Intent serviceIntent = new Intent(this, servicio_pantallas.class);
         stopService(serviceIntent);
     }
 

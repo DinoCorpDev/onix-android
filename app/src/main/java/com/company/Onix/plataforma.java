@@ -95,14 +95,15 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
 
-    private LinearLayout mVentana_nota;
-    private Button mBtn_solicitar_dos;
 
-    private ImageView mBtn_cerrar_nota;
+
+
+
     private TextInputEditText mNota;
 
     //place
-
+    private AutocompleteSupportFragment mAutocomplete;
+    private AutocompleteSupportFragment mAutocomplete_destino;
 
     private Marker mMarker;
     private PlacesClient mPlaces;
@@ -136,19 +137,21 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private DatabaseReference mData_postular;
 
 
-
-
     //nuevas variables
     private DatabaseReference mData_usuario;
 
 
     //variable api
     private String mApi;
+    private String mActivar_buscador="no";
 
-    private TextView mDireccion_texto;
-    private LinearLayout mBtn_cuadro_destino;
+    private TextView mDinero_bono;
 
+    private LinearLayout mBtn_ubicar;
+    private LinearLayout mBtn_regalo_nuevo;
 
+    //variable bono
+    private String mActivar_bono="";
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -161,7 +164,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                     if (mIsFristTime) {
                         getActiveDrivers();
                         mIsFristTime = false;
-                        //  limitSearch();
+                        limitSearch();
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                                 new CameraPosition.Builder()
                                         .target(new LatLng(location.getLatitude(), location.getLongitude()))
@@ -192,25 +195,67 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
         micono_central = findViewById(R.id.icono_central);
         micono_central_dos = findViewById(R.id.icono_central_dos);
-        mDireccion_texto=findViewById(R.id.direccion_texto);
         mVentana_origen = findViewById(R.id.cuadro_origen);
         mVentana_destino = findViewById(R.id.cuadro_destino);
         mSolicitar_detalle = findViewById(R.id.btn_solicar_detalle);
-
-
-
+        mDinero_bono=findViewById(R.id.dinero_bono);
+        mBtn_ubicar=findViewById(R.id.btn_ubicar);
+        mBtn_regalo_nuevo=findViewById(R.id.btn_regalo_nuevo);
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
         String telefono_bd = mPref.getString("telefono", "");
         String nombre = mPref.getString("nombre", "");
         String ciudad=mPref.getString("mi_ciudad","");
         if(ciudad.equals("")){
-            Intent intent=new Intent(plataforma.this,pantalla_ciudad.class);
-            startActivity(intent);
-            Toast.makeText(plataforma.this, "Por favor configura tu ciudad", Toast.LENGTH_SHORT).show();
+        Intent intent=new Intent(plataforma.this,pantalla_ciudad.class);
+        startActivity(intent);
         }
 
+        mData_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
+        mData_servidor.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+
+                    String version_apk = "20";
+                    String version_conductor = snapshot.child("version_cliente").getValue().toString();
+                    String link_apk = snapshot.child("playstore_usuario").getValue().toString();
+                    String mi_api=snapshot.child("a_api").getValue().toString();
+                    String activar_buscador=snapshot.child("activar_buscador").getValue().toString();
+                    mActivar_buscador=activar_buscador;
+                    String activar_bono=snapshot.child("activar_nuevo_bono").getValue().toString();
+                    mActivar_bono=activar_bono;
+                    mApi=mi_api;
+
+                    instanceAutocompleteOrigin();
+
+                    if(mActivar_bono.equals("si")){
+                        mBtn_regalo_nuevo.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        mBtn_regalo_nuevo.setVisibility(View.INVISIBLE);
+                    }
+
+                    if (!version_conductor.equals(version_apk)) {
+                        Toast.makeText(plataforma.this, "Actualizar sistema", Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(plataforma.this, pantalla_actualizacion.class);
+                        intent.putExtra("link_apk", link_apk);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setAction(Intent.ACTION_RUN);
+
+                        startActivity(intent);
+
+                    }
 
 
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         if (!telefono_bd.equals("")) {
 
@@ -222,7 +267,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         String estado=snapshot.child("estado").getValue().toString();
-                        if(estado.equals("esperando")){
+                        if(estado.equals("vip")){
                             Intent intent=new Intent(plataforma.this, pantalla_esperando.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.setAction(Intent.ACTION_RUN);
@@ -242,6 +287,13 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
                         String verificacion=snapshot.child("verificacion").getValue().toString();
+
+                        if(snapshot.hasChild("ciudad")){
+
+                        }else {
+                            Intent intent=new Intent(plataforma.this,pantalla_ciudad.class);
+                            startActivity(intent);
+                        }
 
                         if(snapshot.hasChild("nombre")){
 
@@ -272,20 +324,90 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                             startActivity(intent);
                         }
 
-                        if(snapshot.hasChild("bono")){
-                            String mi_bono=snapshot.child("bono").getValue().toString();
-                            int mi_bono_numero=Integer.parseInt(mi_bono);
-                            if(mi_bono_numero>=2000){
-                                Toast.makeText(plataforma.this, "Recuerda que tienes uno bono disponible de: "+mi_bono_numero+" pesos", Toast.LENGTH_LONG).show();
+                        if(snapshot.hasChild("nuevo_bono")){
+                            String mi_bono=snapshot.child("nuevo_bono").getValue().toString();
+                            mDinero_bono.setText("$ "+mi_bono);
 
+
+                            if(mi_bono.length()==1){
+
+
+                                String pesos=mi_bono.substring(0,1);
+
+                                mDinero_bono.setText("$ "+pesos);
+                            }
+
+                            if(mi_bono.length()>1){
+
+                                String pesos=mi_bono.substring(0,2);
+
+                                mDinero_bono.setText("$ "+pesos);
+                            }
+
+                            if(mi_bono.length()>2){
+
+                                String pesos=mi_bono.substring(0,3);
+
+                                mDinero_bono.setText("$ "+pesos);
+                            }
+
+                            if(mi_bono.length()>3){
+                                String miles= mi_bono.substring(0,1);
+                                String pesos=mi_bono.substring(1,4);
+
+                                mDinero_bono.setText("$ "+miles+"."+pesos);
+
+
+
+                            }
+                            if(mi_bono.length()>4){
+
+                                String miles= mi_bono.substring(0,2);
+                                String pesos=mi_bono.substring(2,5);
+
+                                mDinero_bono.setText("$ "+miles+"."+pesos);
+
+                            }
+                            if(mi_bono.length()>5){
+                                String miles= mi_bono.substring(0,3);
+                                String pesos=mi_bono.substring(3,6);
+
+                                mDinero_bono.setText("$ "+miles+"."+pesos);
+
+                            }
+
+
+                            if(mi_bono.length()>6){
+                                String millon=mi_bono.substring(0,1);
+                                String miles= mi_bono.substring(1,4);
+                                String pesos=mi_bono.substring(4,7);
+
+                                mDinero_bono.setText("$ "+millon+"."+miles+"."+pesos);
+
+                            }
+
+
+
+
+                            int mi_bono_numero=Integer.parseInt(mi_bono);
+
+                            if(mActivar_bono.equals("si")){
+
+                                if(mi_bono_numero>=1000){
+                                    //  Toast.makeText(plataforma.this, "Recuerda que tienes uno bono disponible de: "+mi_bono_numero+" pesos", Toast.LENGTH_LONG).show();
+                                    mBtn_regalo_nuevo.setVisibility(View.VISIBLE);
+                                }else {
+                                    mBtn_regalo_nuevo.setVisibility(View.INVISIBLE);
+                                }
                             }
 
                         }else {
                             HashMap<String,Object> registro= new HashMap<>();
                             //datos normales
-                            registro.put("bono",0);
+                            registro.put("nuevo_bono",10000);
                             mData_usuario.updateChildren(registro);
-
+                            mDinero_bono.setText("$ 10.000");
+                            mBtn_regalo_nuevo.setVisibility(View.VISIBLE);
 
                         }
                     }else {
@@ -310,44 +432,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
 
-            mData_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
-            mData_servidor.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-
-                        String version_apk = "19";
-                        String version_conductor = snapshot.child("version_cliente").getValue().toString();
-                        String link_apk = snapshot.child("playstore_usuario").getValue().toString();
-                        String mi_api=snapshot.child("a_api").getValue().toString();
-                        mApi=mi_api;
-
-
-
-                        if (!version_conductor.equals(version_apk)) {
-                            Toast.makeText(plataforma.this, "Actualizar sistema", Toast.LENGTH_LONG).show();
-
-                            Intent intent = new Intent(plataforma.this, pantalla_actualizacion.class);
-                            intent.putExtra("link_apk", link_apk);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.setAction(Intent.ACTION_RUN);
-
-                            startActivity(intent);
-
-                        }
-
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-
 
 
 
@@ -363,33 +447,34 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             startActivity(intent);
         }
 
-
-        mVentana_nota=findViewById(R.id.ventan_nota);
-
-        mBtn_cerrar_nota=findViewById(R.id.btn_cerrar_nota);
-        mBtn_cerrar_nota.setOnClickListener(new View.OnClickListener() {
+        mBtn_regalo_nuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mVentana_nota.setVisibility(View.INVISIBLE);
+                Intent intent =new Intent(plataforma.this,pantalla_regalo.class);
+                startActivity(intent);
+            }
+        });
 
+        mBtn_ubicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mMap!=null){
+                    if(mCurrentLatLng.latitude!=0&& mCurrentLatLng.longitude!=0){
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition.Builder()
+                                        .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
+                                        .zoom(18f)
+                                        .build()
 
-
-
-
-
+                        ));
+                    }
+                }
             }
         });
 
 
-        mBtn_solicitar_dos=findViewById(R.id.btn_solicitar_dos);
-        mBtn_solicitar_dos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                mVentana_nota.setVisibility(View.INVISIBLE);
 
-            }
-        });
 
         mBtn_solicitar=findViewById(R.id.btn_solicitar);
         mBtn_solicitar.setOnClickListener(new View.OnClickListener() {
@@ -406,47 +491,21 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                     startActivity(intent);
 
                 }else {
-                    // mOriginSelect=false;
-                    // micono_central.setVisibility(View.INVISIBLE);
-                    //micono_central_dos.setVisibility(View.VISIBLE);
+                    mOriginSelect=false;
+                    micono_central.setVisibility(View.INVISIBLE);
+                    micono_central_dos.setVisibility(View.VISIBLE);
 
-                    //mVentana_origen.setVisibility(View.INVISIBLE);
+                    mVentana_origen.setVisibility(View.INVISIBLE);
+                    mVentana_destino.setVisibility(View.VISIBLE);
+                    if(mDestinationLatLng!=null){
+                        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition.Builder()
+                                        .target(mDestinationLatLng)
+                                        .zoom(18f)
+                                        .build()
 
-
-                    if(mOrigenLatLng !=null ){
-                        Intent intent = new Intent(plataforma.this,pantalla_pedir_servicio.class);
-                        intent.putExtra("origin_lat",mOrigenLatLng.latitude);
-                        intent.putExtra("origin_lng",mOrigenLatLng.longitude);
-                        //  intent.putExtra("destination_lat",mDestinationLatLng.latitude);
-                        // intent.putExtra("destination_lng",mDestinationLatLng.longitude);
-                        intent.putExtra("origin",mOrigen);
-                        // intent.putExtra("destination",mDestination);
-                        //intent.putExtra("ciudad_origen",mCiudad_origen);
-                        startActivity(intent);
+                        ));
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    //  mVentana_destino.setVisibility(View.VISIBLE);
-                    // if(mDestinationLatLng!=null){
-                    //  mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
-                    //        new CameraPosition.Builder()
-                    //              .target(mDestinationLatLng)
-                    //            .zoom(18f)
-                    //          .build()
-
-                    //));
-                    //}
 
                 }
 
@@ -469,13 +528,13 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
-        // if (!Places.isInitialized()) {
-        //   Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
-        // }
-        // mPlaces = Places.createClient(this);
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+        }
+        mPlaces = Places.createClient(this);
 
-
-
+        instanceAutocompleteOrigin();
+        instanceAutocompleteDestino();
 
         onCamereMove();
 
@@ -492,6 +551,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                     intent.putExtra("origin",mOrigen);
                     intent.putExtra("destination",mDestination);
                     intent.putExtra("ciudad_origen",mCiudad_origen);
+                    intent.putExtra("activar_bono",mActivar_bono);
                     startActivity(intent);
                 }
             }
@@ -616,21 +676,100 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
     private void  limitSearch(){
-        LatLng northSide= SphericalUtil.computeOffset(mCurrentLatLng,5000,0);
-        LatLng southSide= SphericalUtil.computeOffset(mCurrentLatLng,5000,180);
-        // mAutocomplete.setCountry("CO");
-        //mAutocomplete.setLocationBias(RectangularBounds.newInstance(southSide,northSide));
+        LatLng northSide= SphericalUtil.computeOffset(mCurrentLatLng,2000,0);
+        LatLng southSide= SphericalUtil.computeOffset(mCurrentLatLng,2000,180);
+        mAutocomplete.setCountry("CO");
+        mAutocomplete.setLocationBias(RectangularBounds.newInstance(southSide,northSide));
 
-        //mAutocomplete_destino.setCountry("CO");
-        //mAutocomplete_destino.setLocationBias(RectangularBounds.newInstance(southSide,northSide));
+        mAutocomplete_destino.setCountry("CO");
+        mAutocomplete_destino.setLocationBias(RectangularBounds.newInstance(southSide,northSide));
 
 
     }
 
+    private void  instanceAutocompleteDestino(){
+        mAutocomplete_destino = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.place_destino);
+        mAutocomplete_destino.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        mAutocomplete_destino.setHint("Lugar De destino");
+
+        mAutocomplete_destino.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+
+
+                mDestination = place.getName();
+
+                mDestinationLatLng = place.getLatLng();
+                Log.d("PLACE", "Name" + mDestination);
+                Log.d("PLACE", "lat" + mDestinationLatLng.latitude);
+                Log.d("PLACE", "lat" + mDestinationLatLng.longitude);
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                        new CameraPosition.Builder()
+                                .target(mDestinationLatLng)
+                                .zoom(18f)
+                                .build()
+
+                ));
 
 
 
 
+
+
+
+
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
+    }
+
+
+    private void  instanceAutocompleteOrigin(){
+        mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeaAutocompleteOrigin);
+        mAutocomplete.setHint("Lugar De Origen");
+
+            if(mActivar_buscador.equals("si")){
+                mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+
+                mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(@NonNull Place place) {
+
+
+                        mOrigen = place.getName();
+
+                        mOrigenLatLng = place.getLatLng();
+                        Log.d("PLACE", "Name" + mOrigen);
+                        Log.d("PLACE", "lat" + mOrigenLatLng.latitude);
+                        Log.d("PLACE", "lat" + mOrigenLatLng.longitude);
+                        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition.Builder()
+                                        .target(mOrigenLatLng)
+                                        .zoom(18f)
+                                        .build()
+
+                        ));
+
+
+
+                    }
+
+                    @Override
+                    public void onError(@NonNull Status status) {
+
+                    }
+                });
+            }
+
+
+
+
+
+    }
 
 
 
@@ -662,20 +801,17 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                                 mCiudad_origen = "";
                             }
                             mOrigen = address + " " + city;
-                            // mAutocomplete.setText(address + " " + city);
-                            mDireccion_texto.setText(address + " " + city);
+                            mAutocomplete.setText(address + " " + city);
 
 
                             if (calle != null) {
                                 mDireccion.setText(calle + " #" + numero_casa);
-                                mDireccion_texto.setText(calle + " #" + numero_casa);
-                                //  mAutocomplete.setText(calle + " #" + numero_casa);
+                                mAutocomplete.setText(calle + " #" + numero_casa);
 
 
                             } else {
 
                                 mDireccion.setText(numero_casa);
-                                mDireccion_texto.setText(numero_casa);
 
                             }
 
@@ -692,7 +828,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                             String country = addressList.get(0).getCountryName();
                             String address = addressList.get(0).getAddressLine(0);
                             // mDestination = address + " " + city;
-                            // mAutocomplete_destino.setText(address + " " + city);
+                            mAutocomplete_destino.setText(address + " " + city);
                             mDestination = address + " " + city;
                             // mCiudad=city;
                             // if(mCiudad==null){
@@ -825,27 +961,4 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         return position;
     }
 
-    private LatLng encontrar_direccion(String encontrar) throws IOException {
-        Geocoder coder= new Geocoder(plataforma.this);
-        List<Address>addressList;
-        addressList=coder.getFromLocationName(encontrar,5);
-        if(addressList==null){
-            Toast.makeText(this, "no se encontro nada", Toast.LENGTH_SHORT).show();
-        }else {
-            Address location= addressList.get(0);
-            Toast.makeText(this, ""+location, Toast.LENGTH_LONG).show();
-            return new LatLng(location.getLatitude(),location.getLongitude());
-        }
-
-        return null;
-
-    }
-
 }
-
-
-
-
-
-
-

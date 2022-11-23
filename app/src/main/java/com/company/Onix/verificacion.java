@@ -49,7 +49,7 @@ public class verificacion extends AppCompatActivity {
 
     private TextView mMensaje;
 
-    private FirebaseAuth mAuth;
+    private  FirebaseAuth mAuth;
 
 
     private String mVerificacion;
@@ -67,6 +67,7 @@ public class verificacion extends AppCompatActivity {
     private LinearLayout mBtn_soporte_ingreso;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,30 +81,30 @@ public class verificacion extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Por favor actualiza los servicio de google play", Toast.LENGTH_SHORT).show();
             // Prompt user to update Google Play services.
-            Intent intent = new Intent(verificacion.this, pantalla_intalar_servicios.class);
+            Intent intent=new Intent(verificacion.this,pantalla_intalar_servicios.class);
             startActivity(intent);
         }
-        progressDialog = new ProgressDialog(this);
+        progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Comprobando ingreso a tu cuenta, por favor espere");
 
-        mVentana_codigo = findViewById(R.id.ventana_codigo);
-        mVentana_carga = findViewById(R.id.ventana_carga);
-        mVentana_celular = findViewById(R.id.ventan_celular);
-        mNumero_telefono = findViewById(R.id.numero_telefono_texto);
-        mNumero_codigo = findViewById(R.id.numero_codigo);
-        mBtn_verificar_codigo = findViewById(R.id.btn_verificar_codigo);
-        mBtn_soporte_ingreso = findViewById(R.id.btn_soporte_ingreso);
+        mVentana_codigo=findViewById(R.id.ventana_codigo);
+        mVentana_carga=findViewById(R.id.ventana_carga);
+        mVentana_celular=findViewById(R.id.ventan_celular);
+        mNumero_telefono=findViewById(R.id.numero_telefono_texto);
+        mNumero_codigo=findViewById(R.id.numero_codigo);
+        mBtn_verificar_codigo=findViewById(R.id.btn_verificar_codigo);
+        mBtn_soporte_ingreso=findViewById(R.id.btn_soporte_ingreso);
         mBtn_verificar_codigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String codigo = mNumero_codigo.getText().toString();
-                if (codigo.equals("")) {
+                String codigo=mNumero_codigo.getText().toString();
+                if(codigo.equals("")){
                     mNumero_codigo.requestFocus();
                     Toast.makeText(verificacion.this, "Digite su código", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (codigo.length() < 6) {
+                }else {
+                    if(codigo.length()<6){
                         Toast.makeText(verificacion.this, "El código debe de ser de 6 digitos", Toast.LENGTH_LONG).show();
-                    } else {
+                    }else {
                         ocultar_teclado();
                         verificar_codigo(codigo);
                     }
@@ -116,25 +117,25 @@ public class verificacion extends AppCompatActivity {
         mBtn_soporte_ingreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+57" + "3044444549" + "&text=Hola%20soy%20cliente%20de%20onix%20tengo%20problemas%20para%20ingresar:%20mi%20número%20es:" + mNumero_telefono.getText().toString());
+                Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+57" + "3117942922" + "&text=Hola%20soy%20cliente%20de%20onix%20tengo%20problemas%20para%20ingresar:%20mi%20número%20es:"+mNumero_telefono.getText().toString());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
         });
 
-        mBtn_verificar_telefono = findViewById(R.id.btn_verificar_telefono);
+        mBtn_verificar_telefono=findViewById(R.id.btn_verificar_telefono);
         mBtn_verificar_telefono.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String numero = mNumero_telefono.getText().toString();
-                if (numero.equals("")) {
+                String numero=mNumero_telefono.getText().toString();
+                if(numero.equals("")){
                     mNumero_telefono.requestFocus();
                     Toast.makeText(verificacion.this, "Por favor digite su número", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (numero.length() < 10) {
+                }else {
+                    if(numero.length()<10){
                         Toast.makeText(verificacion.this, "El número de teléfono debe de tener minimo 10 digitos ejemplo (304 44 44 549)", Toast.LENGTH_LONG).show();
-                    } else {
+                    }else {
                         mVentana_carga.setVisibility(View.VISIBLE);
                         mVentana_celular.setVisibility(View.INVISIBLE);
                         mVentana_codigo.setVisibility(View.INVISIBLE);
@@ -146,13 +147,20 @@ public class verificacion extends AppCompatActivity {
                 }
 
 
+
             }
         });
 
 
+
+
+
+
+
+
     }
 
-    private void enviar_numero(String numero) {
+    private void enviar_numero(String numero){
         ocultar_teclado();
         mAuth = FirebaseAuth.getInstance();
         FirebaseAuth.getInstance().getFirebaseAuthSettings().forceRecaptchaFlowForTesting(true);
@@ -161,8 +169,13 @@ public class verificacion extends AppCompatActivity {
 
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
+
                 //Log.d(TAG, "onVerificationCompleted:" + credential);
+
+
                 signInWithPhoneAuthCredential(credential);
+
+
                 Toast.makeText(verificacion.this, "ya esta certificado", Toast.LENGTH_LONG).show();
             }
 
@@ -170,23 +183,30 @@ public class verificacion extends AppCompatActivity {
             public void onVerificationFailed(FirebaseException e) {
                 // This callback is invoked in an invalid request for verification is made,
                 // for instance if the the phone number format is not valid.
-                Log.d("Num:", e.getMessage());
-                String mensaje = "Problemas con el ingreso";
+
+
+
+                String mensaje="Problemas con el ingreso";
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
-                    mensaje = "Error de autentificacion verifique bien el número";
+                    mensaje="Error de autentificacion verifique bien el número";
+
 
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
-                    mensaje = "Tus intentos ya superaron el limite, por favor espera 5 minutos para volverlo a intentar";
-                }
+                    mensaje="Tus intentos ya superaron el limite, por favor espera 5 minutos para volverlo a intentar";
 
+                }
                 progressDialog.dismiss();
                 mVentana_celular.setVisibility(View.VISIBLE);
                 mVentana_carga.setVisibility(View.INVISIBLE);
                 mVentana_codigo.setVisibility(View.INVISIBLE);
-                Toast.makeText(verificacion.this, mensaje, Toast.LENGTH_LONG).show();
+                Toast.makeText(verificacion.this,mensaje , Toast.LENGTH_LONG).show();
                 mBtn_soporte_ingreso.setVisibility(View.VISIBLE);
+
+
+
+
             }
 
             @Override
@@ -207,9 +227,10 @@ public class verificacion extends AppCompatActivity {
         };
 
 
+
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber("+57" + numero)       // Phone number to verify
+                        .setPhoneNumber("+57"+numero)       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(this)                 // Activity (for callback binding)
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
@@ -217,7 +238,9 @@ public class verificacion extends AppCompatActivity {
         PhoneAuthProvider.verifyPhoneNumber(options);
 
 
+
     }
+
 
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
@@ -231,52 +254,53 @@ public class verificacion extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                             // Update UI
 
-                            mData = FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(mNumero_telefono.getText().toString());
+                            mData= FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(mNumero_telefono.getText().toString());
                             mData.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        String nombre = snapshot.child("nombre").getValue().toString();
+                                    if(snapshot.exists()){
+                                        String nombre=snapshot.child("nombre").getValue().toString();
 
-                                        String foto = snapshot.child("foto").getValue().toString();
+                                        String foto=snapshot.child("foto").getValue().toString();
 
 
                                         //colocando nueva variable para identificar el cliente nuevo
-                                        HashMap<String, Object> registro = new HashMap<>();
+                                        HashMap<String,Object> registro= new HashMap<>();
                                         //datos normales
-                                        registro.put("actualizacion", "si");
+                                        registro.put("actualizacion","si");
                                         mData.updateChildren(registro);
 
-                                        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-                                        mEditor = mPref.edit();
+                                        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
+                                        mEditor=mPref.edit();
 
-                                        mEditor.putString("foto", foto);
-                                        mEditor.putString("nombre", nombre);
+                                        mEditor.putString("foto",foto);
+                                        mEditor.putString("nombre",nombre);
 
-                                        mEditor.putString("telefono", mNumero_telefono.getText().toString());
+                                        mEditor.putString("telefono",mNumero_telefono.getText().toString());
 
-                                        mEditor.putString("pantalla", "plataforma");
+                                        mEditor.putString("pantalla","plataforma");
 
                                         mEditor.apply();
                                         progressDialog.dismiss();
                                         Toast.makeText(verificacion.this, "Ingresando a la plataforma", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(verificacion.this, plataforma.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        Intent intent=new Intent(verificacion.this, plataforma.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         intent.setAction(Intent.ACTION_RUN);
                                         startActivity(intent);
 
 
-                                    } else {
 
-                                        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-                                        mEditor = mPref.edit();
-                                        mEditor.putString("telefono", mNumero_telefono.getText().toString());
-                                        mEditor.putString("pantalla", "registro");
+                                    }else {
+
+                                        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
+                                        mEditor=mPref.edit();
+                                        mEditor.putString("telefono",mNumero_telefono.getText().toString());
+                                        mEditor.putString("pantalla","registro");
                                         mEditor.apply();
                                         progressDialog.dismiss();
                                         Toast.makeText(verificacion.this, "Por favor registre su cuenta", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(verificacion.this, pantalla_registro.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        Intent intent=new Intent(verificacion.this, pantalla_registro.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         intent.setAction(Intent.ACTION_RUN);
                                         startActivity(intent);
 
@@ -302,7 +326,7 @@ public class verificacion extends AppCompatActivity {
     }
 
 
-    private void verificar_codigo(String codigo) {
+    private void  verificar_codigo(String codigo){
         progressDialog.show();
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificacion, codigo);
         signInWithPhoneAuthCredential(credential);
@@ -316,7 +340,7 @@ public class verificacion extends AppCompatActivity {
 
     public void ocultar_teclado() {
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mNumero_telefono.getWindowToken(), 0);
     }
 

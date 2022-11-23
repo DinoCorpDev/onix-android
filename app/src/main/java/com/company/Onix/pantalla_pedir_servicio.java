@@ -16,15 +16,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class
 pantalla_pedir_servicio extends AppCompatActivity {
-
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
     private LinearLayout mBtn_siguiente;
     private CircleImageView mBtn_atras;
     private TextInputEditText mNuevo_destino;
+
     private  double mExtra_lat_origen;
     private double mExta_lng_origen;
     private String mExtra_origen;
+
+
+
+
     private String mCiudad;
     private TextView mOrigen;
     private TextInputEditText mPrecio_cliente;
@@ -36,28 +40,49 @@ pantalla_pedir_servicio extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_pedir_servicio);
 
+
+
         mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
         String ciudad=mPref.getString("mi_ciudad","");
         String telefono_bd=mPref.getString("telefono","");
         String nombre_bd=mPref.getString("nombre","");
         mCiudad=ciudad;
 
+
         if(telefono_bd.equals("")|| telefono_bd==null){
+
             Intent intent=new Intent(pantalla_pedir_servicio.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
+
             startActivity(intent);
+
         }else {
+
             mNuevo_destino=findViewById(R.id.destino_nuevo);
             mPrecio_cliente=findViewById(R.id.precio_servicio_cliente);
             mCliente_comentario=findViewById(R.id.cliente_comentario);
             mExtra_origen=getIntent().getStringExtra("origin");
             mExtra_lat_origen = getIntent().getDoubleExtra("origin_lat", 0);
             mExta_lng_origen = getIntent().getDoubleExtra("origin_lng", 0);
+
         }
 
+
+
+
+
+
+
+
+
         mBtn_atras=findViewById(R.id.btn_atras_destino);
-        mBtn_atras.setOnClickListener(v -> finish());
+        mBtn_atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         mBtn_siguiente=findViewById(R.id.btn_siguiente_modo);
         mBtn_siguiente.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +113,7 @@ pantalla_pedir_servicio extends AppCompatActivity {
                             intent.putExtra("precio",mPrecio);
                             intent.putExtra("nota", comentario);
                             intent.putExtra("destino",mNuevo_destino.getText().toString());
+
                             startActivity(intent);
                         }
 

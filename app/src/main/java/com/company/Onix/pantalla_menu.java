@@ -35,6 +35,7 @@ public class pantalla_menu extends AppCompatActivity {
     private Button mBtn_modo_conductor;
     private Button mBtn_terminos;
     private Button mBtn_cerrar_aplicacion;
+    private Button mBtn_cerrar_sesion;
     private String Telefono_soporte;
     private String pagina;
     private String playstore_usuario;
@@ -76,7 +77,7 @@ public class pantalla_menu extends AppCompatActivity {
         mBtn_modo_conductor=findViewById(R.id.btn_conductor);
         mBtn_pagina=findViewById(R.id.btn_pagina_web);
         mBtn_cerrar_aplicacion=findViewById(R.id.btn_salir);
-
+        mBtn_cerrar_sesion=findViewById(R.id.btn_cerrar_sesion);
 
 
         DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("a_servidor");
@@ -155,6 +156,21 @@ public class pantalla_menu extends AppCompatActivity {
             }
         });
 
+        mBtn_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
+                mEditor=mPref.edit();
+                mEditor.putString("id_publi","");
+                mEditor.putString("pantalla","");
+                mEditor.apply();
+                parar_alertas();
+                Intent intent = new Intent(pantalla_menu.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.setAction(Intent.ACTION_RUN);
+                startActivity(intent);
+            }
+        });
 
         mBtn_historial.setOnClickListener(new View.OnClickListener() {
             @Override
