@@ -63,7 +63,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.SphericalUtil;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -543,7 +542,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             public void onClick(View v) {
 
                 if(mOrigenLatLng !=null && mDestinationLatLng!=null){
-                    Intent intent = new Intent(plataforma.this,pantalla_detalle.class);
+                    Intent intent = new Intent(plataforma.this, pantalla_detalle.class);
                     intent.putExtra("origin_lat",mOrigenLatLng.latitude);
                     intent.putExtra("origin_lng",mOrigenLatLng.longitude);
                     intent.putExtra("destination_lat",mDestinationLatLng.latitude);

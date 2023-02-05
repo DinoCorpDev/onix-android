@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pantalla_pedir_servicio">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:text="POR FAVOR DIGITA TU DESTINO"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lugar a donde se dirige"/>
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/botones_redondos"
+                android:backgroundTint="@color/white"
+                android:orientation="horizontal"
+
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="25dp"
+                android:paddingLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginLeft="25dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_destino_cliente_dos"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/destino_nuevo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Digite su destino"
+                        android:textSize="20dp"
+                        android:background="@color/white"
+                        android:textColorHint="@color/color_gris"
+                        android:inputType="text">
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/botones_redondos"
+                android:backgroundTint="@color/white"
+                android:orientation="horizontal"
+
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="25dp"
+                android:paddingLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginLeft="25dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_moneda"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/precio_servicio_cliente"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ofrezca su tarifa"
+                        android:textSize="20dp"
+                        android:background="@color/white"
+                        android:textColorHint="@color/color_gris"
+                        android:inputType="number">
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/botones_redondos"
+                android:backgroundTint="@color/white"
+                android:orientation="horizontal"
+
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="25dp"
+                android:paddingLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginLeft="25dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_comentario_dos"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cliente_comentario"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nota para el conductor"
+                        android:textSize="20dp"
+                        android:background="@color/white"
+                        android:textColorHint="@color/color_gris"
+                        android:inputType="text">
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/btn_siguiente_modo"
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/botones_redondos"
+                android:backgroundTint="@color/purple_700"
+                android:layout_marginRight="25dp"
+                android:layout_marginLeft="25dp"
+                android:padding="15dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:text="SIGUIENTE"/>
+                <ImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_flecha_adelante"/>
+            </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginRight="25dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/btn_atras_destino"
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/color_blanco"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_flecha_atras_negra"
+            android:layout_gravity="left|top"
+            app:civ_border_width="3dp"
+            app:civ_border_color="#F0F0F0"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="Regresar"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

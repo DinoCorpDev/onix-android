@@ -41,9 +41,8 @@ public class pantalla_registro extends AppCompatActivity {
 
     private TextInputEditText mNombre;
     private TextInputEditText mTelefono;
-    private TextInputEditText mContra;
+    private TextInputEditText mReferido;
     private Button mBtn_siguiente_registro;
-
 
 
     //listener
@@ -60,9 +59,9 @@ public class pantalla_registro extends AppCompatActivity {
     //subir imagenes
     private CircleImageView mBtn_seleccionar_imagen;
 
-    private ArrayList<Uri> ImageList=new ArrayList<Uri>();
-    private int upload_count=0;
-    private static final int GALLERY_REQUEST =1 ;
+    private ArrayList<Uri> ImageList = new ArrayList<Uri>();
+    private int upload_count = 0;
+    private static final int GALLERY_REQUEST = 1;
     private Uri ImageUri;
     private File mImageFile;
 
@@ -73,158 +72,114 @@ public class pantalla_registro extends AppCompatActivity {
     private String mTeleno_certificado;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_registro);
-        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
+        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
         String telefono_bd = mPref.getString("telefono", "");
-       if(telefono_bd.equals("")){
-           mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-           mEditor=mPref.edit();
+        if (telefono_bd.equals("")) {
+            mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+            mEditor = mPref.edit();
 
-           mEditor.putString("pantalla","");
+            mEditor.putString("pantalla", "");
 
-           mEditor.apply();
-           progressDialog.dismiss();
-           Toast.makeText(pantalla_registro.this, "Por favor cree una cuenta", Toast.LENGTH_SHORT).show();
-           Intent intent=new Intent(pantalla_registro.this, MainActivity.class);
-           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-           intent.setAction(Intent.ACTION_RUN);
-           startActivity(intent);
-       }else {
-           mTeleno_certificado=telefono_bd;
-       }
-
-
-        mImageProvider=new ImagesProvider("imagenes_perfil_usuarios");
+            mEditor.apply();
+            progressDialog.dismiss();
+            Toast.makeText(pantalla_registro.this, "Por favor cree una cuenta", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(pantalla_registro.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction(Intent.ACTION_RUN);
+            startActivity(intent);
+        } else {
+            mTeleno_certificado = telefono_bd;
+        }
 
 
-        mBtn_seleccionar_imagen=findViewById(R.id.btn_imagen);
+        mImageProvider = new ImagesProvider("imagenes_perfil_usuarios");
+
+
+        mBtn_seleccionar_imagen = findViewById(R.id.btn_imagen);
         mBtn_seleccionar_imagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent imagenes=new Intent(Intent.ACTION_GET_CONTENT);
+                Intent imagenes = new Intent(Intent.ACTION_GET_CONTENT);
                 imagenes.setType("image/*");
-                startActivityForResult(imagenes,GALLERY_REQUEST);
+                startActivityForResult(imagenes, GALLERY_REQUEST);
             }
         });
 
-        progressDialog=new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Comprobando el registro de tu cuenta por favor espere");
 
 
-
-        mNombre=findViewById(R.id.nombre);
-        mTelefono=findViewById(R.id.telefono);
+        mNombre = findViewById(R.id.nombre);
+        mTelefono = findViewById(R.id.telefono);
         mTelefono.setText(mTeleno_certificado);
-        mContra=findViewById(R.id.contra);
+        mReferido = findViewById(R.id.referido);
 
 
+        mBtn_siguiente_registro = findViewById(R.id.btn_siguiente_registrar);
+        mBtn_siguiente_registro.setOnClickListener(v -> {
+            String nombre = mNombre.getText().toString();
+            String telefono = mTelefono.getText().toString();
+            String referido = mReferido.getText().toString();
+            if (nombre.equals("")) {
+                mNombre.requestFocus();
+                Toast.makeText(pantalla_registro.this, "por favor coloque un nombre", Toast.LENGTH_SHORT).show();
+            } else {
+                if (mImageFile == null) {
+                    enviar_nota_audio();
+                    Toast.makeText(pantalla_registro.this, "por favor suba una imagen para su perfil de usuario", Toast.LENGTH_LONG).show();
+                    Intent imagenes = new Intent(Intent.ACTION_GET_CONTENT);
+                    imagenes.setType("image/*");
+                    startActivityForResult(imagenes, GALLERY_REQUEST);
 
-
-        mBtn_siguiente_registro=findViewById(R.id.btn_siguiente_registrar);
-        mBtn_siguiente_registro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String nombre=mNombre.getText().toString();
-                String telefono=mTelefono.getText().toString();
-                String contra=mContra.getText().toString();
-
-                if (nombre.equals("")){
-                    mNombre.requestFocus();
-                    Toast.makeText(pantalla_registro.this, "por favor coloque un nombre", Toast.LENGTH_SHORT).show();
-                }else {
-
-                                    if(mImageFile==null){
-                                        enviar_nota_audio();
-                                        Toast.makeText(pantalla_registro.this, "por favor suba una imagen para su perfil de usuario", Toast.LENGTH_LONG).show();
-                                        Intent imagenes=new Intent(Intent.ACTION_GET_CONTENT);
-                                        imagenes.setType("image/*");
-                                        startActivityForResult(imagenes,GALLERY_REQUEST);
-
-                                    }else {
-                                        progressDialog.show();
-                                        mBtn_siguiente_registro.setEnabled(false);
-                                        subir_imagen();
-
-
-
-
-
-
-
-                    }
+                } else {
+                    progressDialog.show();
+                    mBtn_siguiente_registro.setEnabled(false);
+                    subir_imagen();
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
         });
 
 
-
     }
 
-    public void  enviar_nota_audio(){
-        cosa=new TextToSpeech(getBaseContext(), new TextToSpeech.OnInitListener() {
+    public void enviar_nota_audio() {
+        cosa = new TextToSpeech(getBaseContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status!=TextToSpeech.ERROR){
-
+                if (status != TextToSpeech.ERROR) {
                     cosa.setLanguage(Locale.getDefault());
-                    String miTexto="Por favor suba una foto para su perfil de usuario. Gracias";
-
-                    cosa.speak(miTexto,cosa.QUEUE_FLUSH,null,null);
-
+                    String miTexto = "Por favor suba una foto para su perfil de usuario. Gracias";
+                    cosa.speak(miTexto, cosa.QUEUE_FLUSH, null, null);
                 }
-
-
             }
         });
 
     }
-
-
-
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == GALLERY_REQUEST && resultCode == RESULT_OK ){
+        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK) {
             try {
-                mImageFile= FileUtil.from(this,data.getData());
+                mImageFile = FileUtil.from(this, data.getData());
                 mBtn_seleccionar_imagen.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath()));
-
-
-            }catch (Exception e){
-                Log.d("Error","Mensaje: "+e.getMessage());
+            } catch (Exception e) {
+                Log.d("Error", "Mensaje: " + e.getMessage());
             }
         }
     }
 
     private void subir_imagen() {
-        mImageProvider.saveImage(pantalla_registro.this,mImageFile,mTelefono.getText().toString()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+        mImageProvider.saveImage(pantalla_registro.this, mImageFile, mTelefono.getText().toString()).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     mImageProvider.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
 
                         @Override
@@ -232,44 +187,47 @@ public class pantalla_registro extends AppCompatActivity {
                             String miFoto = uri.toString();
 
                             //enviar_registro a la base de datos del conductor nuevo
+                            String newRef = "ONIX";
+                            if(!mReferido.getText().toString().isEmpty()){
+                                newRef = mReferido.getText().toString();
+                            }
 
-                            DatabaseReference servicio= FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(mTelefono.getText().toString());
-                            HashMap<String,Object> registro= new HashMap<>();
+                            DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(mTelefono.getText().toString());
+                            HashMap<String, Object> registro = new HashMap<>();
                             //datos normales
-                            registro.put("foto",miFoto);
-                            registro.put("nombre",mNombre.getText().toString());
-                            registro.put("telefono",mTeleno_certificado);
+                            registro.put("foto", miFoto);
+                            registro.put("nombre", mNombre.getText().toString());
+                            registro.put("telefono", mTeleno_certificado);
+                            mEditor.putString("id_referido", newRef);
 
                             //datos requeridos por el sistema
-                            registro.put("servicio",0);
-                            registro.put("estado","activo");
-                            registro.put("verificacion","numero_verificado");
+                            registro.put("servicio", 0);
+                            registro.put("estado", "activo");
+                            registro.put("verificacion", "numero_verificado");
 
                             servicio.setValue(registro);
 
                             //guardar_id_en_el _telefono
-                            mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-                            mEditor=mPref.edit();
-                            mEditor.putString("telefono",mTeleno_certificado);
-                            mEditor.putString("nombre",mNombre.getText().toString());
+                            mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+                            mEditor = mPref.edit();
+                            mEditor.putString("telefono", mTeleno_certificado);
+                            mEditor.putString("nombre", mNombre.getText().toString());
 
-                            mEditor.putString("foto",miFoto);
-                            mEditor.putString("pantalla","plataforma");
+                            mEditor.putString("foto", miFoto);
+                            mEditor.putString("pantalla", "plataforma");
                             mEditor.apply();
 
                             progressDialog.dismiss();
-                            Intent intent=new Intent(pantalla_registro.this, plataforma.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Intent intent = new Intent(pantalla_registro.this, plataforma.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.setAction(Intent.ACTION_RUN);
 
                             startActivity(intent);
 
 
-
                         }
                     });
-                }
-                else{
+                } else {
                     mBtn_siguiente_registro.setEnabled(true);
                     Toast.makeText(pantalla_registro.this, "Error al subir la imagen", Toast.LENGTH_SHORT).show();
                 }

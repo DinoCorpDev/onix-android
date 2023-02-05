@@ -15,10 +15,150 @@
       },
       "oauth_client": [
         {
+          "client_id": "360820139858-0lpk7tr13pt13779uoii89ep2j3mb6cn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.Onix",
+            "certificate_hash": "2823a943bc521dc957b75d637794f6d0b5955c03"
+          }
+        },
+        {
+          "client_id": "360820139858-bm8ltlpkhoop5mqcc7ll18k0tbkrl7qb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.Onix",
+            "certificate_hash": "413f2ce64cd960384af928d1e87597a99548a6f1"
+          }
+        },
+        {
+          "client_id": "360820139858-dse70ovrng24iihlhh2r7k66ce53f2js.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.Onix",
+            "certificate_hash": "dd3a5bed66bc74382aee8e27f6f6019f0ea4e039"
+          }
+        },
+        {
+          "client_id": "360820139858-duepfsp5qircrm8864rlhjje51rea5aq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.Onix",
+            "certificate_hash": "6008068d3fb3d9bc38274549c5addba1bb591b3b"
+          }
+        },
+        {
           "client_id": "360820139858-qsjgmancv7bhqnlpo49tp1jutf10mh34.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.company.Onix",
+            "certificate_hash": "bf927c3fce490591fd79a3bb8fa0d6ce4798c6e5"
+          }
+        },
+        {
+          "client_id": "360820139858-5f8dph3k5hj6dtjnfs59ur59okh252qo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzwnCrTKzRfs03oTEgTU8SZFKpkZxl4Dw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360820139858-5f8dph3k5hj6dtjnfs59ur59okh252qo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-2635132313890897~1263458787"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360820139858:android:8c358ad06622239606bc8b",
+        "android_client_info": {
+          "package_name": "com.company.OnixMoto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360820139858-4dug6538ihb49eqfjk4k1ir0692elh4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.OnixMoto",
+            "certificate_hash": "bf927c3fce490591fd79a3bb8fa0d6ce4798c6e5"
+          }
+        },
+        {
+          "client_id": "360820139858-5cun8bm65ek0e8rgeqa4cg46i8gfdss5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.OnixMoto",
+            "certificate_hash": "ac3ae1bb301f4c66ba7cccfe742f799860c8fa11"
+          }
+        },
+        {
+          "client_id": "360820139858-9mihb2lsfcjgaht5nik2gf2ofmkerm5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.OnixMoto",
+            "certificate_hash": "dd3a5bed66bc74382aee8e27f6f6019f0ea4e039"
+          }
+        },
+        {
+          "client_id": "360820139858-t37icbh2h2a94iu11urps5h5o9tonilb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.OnixMoto",
+            "certificate_hash": "6008068d3fb3d9bc38274549c5addba1bb591b3b"
+          }
+        },
+        {
+          "client_id": "360820139858-5f8dph3k5hj6dtjnfs59ur59okh252qo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzwnCrTKzRfs03oTEgTU8SZFKpkZxl4Dw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "360820139858-5f8dph3k5hj6dtjnfs59ur59okh252qo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-2635132313890897~5294697976"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:360820139858:android:8add1808c0b42cad06bc8b",
+        "android_client_info": {
+          "package_name": "com.company.onixpremium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "360820139858-i86rrpr7rhguvambkajt166oo96mqaun.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.onixpremium",
+            "certificate_hash": "dd3a5bed66bc74382aee8e27f6f6019f0ea4e039"
+          }
+        },
+        {
+          "client_id": "360820139858-u28kgpkjp70fjcta4lggtu4qvs79koh9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.onixpremium",
             "certificate_hash": "bf927c3fce490591fd79a3bb8fa0d6ce4798c6e5"
           }
         },
@@ -60,6 +200,14 @@
           }
         },
         {
+          "client_id": "360820139858-871bj7056nqufk5nue9vu84l8l7mkhl3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.Onix",
+            "certificate_hash": "dd3a5bed66bc74382aee8e27f6f6019f0ea4e039"
+          }
+        },
+        {
           "client_id": "360820139858-5f8dph3k5hj6dtjnfs59ur59okh252qo.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -88,6 +236,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "360820139858-hju2anskvj5k99d9nnneu3t783bp4l6e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.OnixMoto",
+            "certificate_hash": "dd3a5bed66bc74382aee8e27f6f6019f0ea4e039"
+          }
+        },
+        {
+          "client_id": "360820139858-oas9ner3pa383pjtbr8pu7fe2d1i7hvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.OnixMoto",
+            "certificate_hash": "6008068d3fb3d9bc38274549c5addba1bb591b3b"
+          }
+        },
         {
           "client_id": "360820139858-sb2scv4runc8k5h62racusmnj4uetnpb.apps.googleusercontent.com",
           "client_type": 1,
@@ -125,6 +289,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "360820139858-67cs22c1blqmflb8bpdqserns9ngi22k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.onixadmin",
+            "certificate_hash": "dd3a5bed66bc74382aee8e27f6f6019f0ea4e039"
+          }
+        },
         {
           "client_id": "360820139858-r977r4djkghe1i5g6c9dmqhdn4bukq8r.apps.googleusercontent.com",
           "client_type": 1,

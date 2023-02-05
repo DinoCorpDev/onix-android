@@ -43,20 +43,19 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCallback {
+public class pantalla_detalle3 extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
+    private String mTelefono_conductor;
 
     private GoogleApiProvider mGoogleApiProvider;
     private PolylineOptions mPolylineOptions;
@@ -127,6 +126,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     /// nuevas variables
     private DatabaseReference mData_usuario_detalle;
+    private DatabaseReference mData_usuario_telefono;
     private DatabaseReference mData_postular;
 
     private TextView mMi_bono;
@@ -159,7 +159,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
         String telefono_bd = mPref.getString("telefono", "");
         String nombre_bd = mPref.getString("nombre", "");
         mCiudad = ciudad;
-        mGoogleApiProvider = new GoogleApiProvider(pantalla_detalle.this);
+        mGoogleApiProvider = new GoogleApiProvider(pantalla_detalle3.this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -173,13 +173,15 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
         if (telefono_bd.equals("") || telefono_bd == null) {
             progressDialog.dismiss();
-            Intent intent = new Intent(pantalla_detalle.this, pantalla_principal.class);
+            Intent intent = new Intent(pantalla_detalle3.this, pantalla_principal.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
 
             startActivity(intent);
 
         } else {
+            mTelefono_conductor = telefono_bd;
+
 
             mData_usuario_detalle = FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(telefono_bd);
             mData_usuario_detalle.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -266,13 +268,13 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                 String comentario = mCliente_comentario.getText().toString();
                 if (precio_letra.equals("")) {
                     mCliente_precio.requestFocus();
-                    Toast.makeText(pantalla_detalle.this, "Por favor ofrezca su tarifa", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(pantalla_detalle3.this, "Por favor ofrezca su tarifa", Toast.LENGTH_SHORT).show();
                 } else {
                     if (mPrecio_convertido != 0) {
                         int precio_cliente = Integer.parseInt(precio_letra);
                         if (precio_cliente < mPrecio_convertido) {
                             mCliente_precio.setText(mPrecio_moto_total);
-                            Toast.makeText(pantalla_detalle.this, "El precio minimo para este servicio es de " + mPrecio_convertido + " cop", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(pantalla_detalle3.this, "El precio minimo para este servicio es de " + mPrecio_convertido + " cop", Toast.LENGTH_SHORT).show();
                         } else {
                             if (mExtra_destino != null && telefono_bd != null && nombre_bd != null && mExtra_origen != null && mExtra_lat_origen != 0 && mExta_lng_origen != 0 && mExtra_lat_destino != 0 && mExtra_lng_destino != 0 && mPrecio != null) {
                                 mData_postular = FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
@@ -290,10 +292,30 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                                 Calendar c = Calendar.getInstance();
                                 SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
                                 String datetime = dateformat.format(c.getTime());
-                                String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                 //End create date sebas
 
-                                DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
+
+                                mData_usuario_telefono = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios");
+                                mData_usuario_telefono.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        int counter = 1;
+                                        for(DataSnapshot datac: snapshot.getChildren()){
+                                            Log.d("log",datac.toString().substring(0,10));
+                                            if(datac.toString().substring(0,10).equals(telefono_bd)){
+                                                counter++;
+                                            }
+                                        }
+                                        mTelefono_conductor = mTelefono_conductor + counter;
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                                DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(mTelefono_conductor);
                                 HashMap<String, Object> registro = new HashMap<>();
                                 registro.put("nota", comentario);
                                 registro.put("destino", mExtra_destino);
@@ -314,10 +336,10 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                                 registro.put("precio", precio_letra);
                                 registro.put("create_date", datetime);
                                 servicio.setValue(registro);
-                                Intent intent = new Intent(pantalla_detalle.this, pantalla_esperando.class);
+                                Intent intent = new Intent(pantalla_detalle3.this, pantalla_esperando.class);
                                 startActivity(intent);
                             } else {
-                                Toast.makeText(pantalla_detalle.this, "No se cargo bien la información", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(pantalla_detalle3.this, "No se cargo bien la información", Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -518,7 +540,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     private void escucuchar_alertas() {
         Intent serviceIntent = new Intent(this, servicio_pantallas.class);
-        ContextCompat.startForegroundService(pantalla_detalle.this, serviceIntent);
+        ContextCompat.startForegroundService(pantalla_detalle3.this, serviceIntent);
 
     }
 

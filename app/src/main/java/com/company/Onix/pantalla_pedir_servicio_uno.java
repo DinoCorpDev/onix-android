@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +45,8 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
     private TextView mTarifa_usuario;
     private  String mPrecio_total;
     private DatabaseReference mData_postular;
+    private String mTelefono_conductor;
+
 
 
 
@@ -86,7 +89,6 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
 
         }
 
-
         mBtn_solicitar_servicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +96,7 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
                 mData_postular=FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd);
                 mData_postular.removeValue();
                 escucuchar_alertas();
+
                 //solicitar_el_servicio
                 DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
                 HashMap<String, Object> registro = new HashMap<>();
@@ -120,20 +123,6 @@ public class pantalla_pedir_servicio_uno extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         mBtn_atras=findViewById(R.id.btn_atras_modo);
         mBtn_atras.setOnClickListener(new View.OnClickListener() {
