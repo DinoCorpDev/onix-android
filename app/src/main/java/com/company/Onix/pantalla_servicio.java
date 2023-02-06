@@ -7,11 +7,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,20 +23,16 @@ import android.widget.Toast;
 import com.company.Onix.providers.GoogleApiProvider;
 import com.company.Onix.services.servicio_pantallas;
 import com.company.Onix.utils.CarMoveAnim;
-import com.company.Onix.utils.DecodePoints;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.SquareCap;
-import com.google.android.libraries.places.api.Places;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,17 +40,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Callback;
 
 public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCallback {
     SharedPreferences mPref;
@@ -256,15 +247,17 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
                 "Ya tome otro servicio.",
                 "El conductor solicito cancelar."};
         int checkedItem = 0; // cow
+        AtomicInteger selectItem = new AtomicInteger(); // cow
         builder.setSingleChoiceItems(array, checkedItem, (dialog, which) -> {
             // user checked an item
             Log.e("which", array[checkedItem]);
+            selectItem.set(checkedItem);
         });
 
         // add OK and Cancel buttons
         builder.setPositiveButton("Aceptar", (dialog, which) -> {
             // user clicked OK
-            saveCanceled("customer_canceled",array[checkedItem]);
+            saveCanceled("customer_canceled",array[selectItem.get()]);
             parar_alertas();
             mData_estados.removeEventListener(mListener_estado);
             mData.removeValue();
