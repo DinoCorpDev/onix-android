@@ -246,7 +246,38 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void alerta_cancelacion() {
+
+        // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(pantalla_servicio.this);
+        builder.setTitle("Porque vas a cancelar el servicio?");
+
+        // add a radio button list
+        String[] array = {"Ya no necesito el servicio.",
+                "Ya tome otro servicio.",
+                "El conductor solicito cancelar."};
+        int checkedItem = 0; // cow
+        builder.setSingleChoiceItems(array, checkedItem, (dialog, which) -> {
+            // user checked an item
+            Log.e("which", array[checkedItem]);
+        });
+
+        // add OK and Cancel buttons
+        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+            // user clicked OK
+            saveCanceled("customer_canceled",array[checkedItem]);
+            parar_alertas();
+            mData_estados.removeEventListener(mListener_estado);
+            mData.removeValue();
+            mData_tabla.removeValue();
+            volver();
+        });
+        builder.setNegativeButton("Cancelar", null);
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(pantalla_servicio.this);
         builder.setMessage("Las cancelaciones frecuentes pueden reducir su calificación y afectar la aceptación de sus solicitudes").setTitle("¿Estar seguro que quieres cancelar?")
                 .setPositiveButton("Si, cancelar", (dialogInterface, i) -> {
                     saveCanceled("customer_canceled");
@@ -257,7 +288,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
                     volver();
                 }).setNegativeButton("No", (dialog, which) -> {
 
-                }).create().show();
+                }).create().show();*/
     }
 
     private void consulta_estado() {
@@ -341,7 +372,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
                     }
 
                     if (estado.equals("El conductor cancelo el servicio")) {
-                        saveCanceled("driver_canceled");
+
                         cosa = new TextToSpeech(getBaseContext(), status -> {
                             if (status != TextToSpeech.ERROR) {
                                 cosa.setLanguage(Locale.getDefault());
@@ -376,63 +407,56 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
 
         AlertDialog.Builder builder = new AlertDialog.Builder(pantalla_servicio.this);
         builder.setMessage("¿Quieres buscar otro conductor?").setTitle("SERVICIO CANCELADO POR EL CONDUCTOR")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        Toast.makeText(pantalla_servicio.this, "ok buscaremos otro", Toast.LENGTH_SHORT).show();
-
-                        mData_estados.removeEventListener(mListener_estado);
-                        parar_alertas();
-                        escucuchar_alertas();
-                        HashMap<String, Object> registro = new HashMap<>();
-
-                        if (micono != null) {
-                            if (micono.equals("")) {
-                                registro.put("estado", "esperando");
-                            }
-                            if (micono.equals("moto")) {
-                                registro.put("estado", "esperando");
-                            }
-                            if (micono.equals("carro")) {
-                                registro.put("estado", "esperando");
-                            }
-                        } else {
+                .setPositiveButton("SI", (dialogInterface, i) -> {
+                    saveCanceled("driver_canceled","SERVICIO CANCELADO POR EL CONDUCTOR");
+                    Toast.makeText(pantalla_servicio.this, "ok buscaremos otro", Toast.LENGTH_SHORT).show();
+                    mData_estados.removeEventListener(mListener_estado);
+                    parar_alertas();
+                    escucuchar_alertas();
+                    HashMap<String, Object> registro = new HashMap<>();
+                    if (micono != null) {
+                        if (micono.equals("")) {
                             registro.put("estado", "esperando");
                         }
-
-                        registro.put("telefono_conductor", "");
-
-                        mData.updateChildren(registro);
-
-                        mData_tabla.removeValue();
-
-
-                        if (mData_posicion_conductor != null) {
-                            mData_posicion_conductor.removeEventListener(mListener);
+                        if (micono.equals("moto")) {
+                            registro.put("estado", "esperando");
                         }
-                        Intent intent = new Intent(pantalla_servicio.this, pantalla_esperando.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.setAction(Intent.ACTION_RUN);
-                        startActivity(intent);
-
-
+                        if (micono.equals("carro")) {
+                            registro.put("estado", "esperando");
+                        }
+                    } else {
+                        registro.put("estado", "esperando");
                     }
 
+                    registro.put("telefono_conductor", "");
 
-                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        parar_alertas();
-                        mData_estados.removeEventListener(mListener_estado);
-                        mData.removeValue();
-                        volver();
+                    mData.updateChildren(registro);
 
+                    mData_tabla.removeValue();
+
+
+                    if (mData_posicion_conductor != null) {
+                        mData_posicion_conductor.removeEventListener(mListener);
                     }
-                }).create().show();
+                    Intent intent = new Intent(pantalla_servicio.this, pantalla_esperando.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.setAction(Intent.ACTION_RUN);
+                    startActivity(intent);
+
+
+                }).setNegativeButton("NO", (dialog, which) -> {
+                    saveCanceled("driver_canceled","SERVICIO CANCELADO POR EL CONDUCTOR");
+                    parar_alertas();
+                    mData_estados.removeEventListener(mListener_estado);
+                    mData.removeValue();
+                    volver();
+
+                }).create();
+        builder.setCancelable(false);
+        builder.show();
     }
 
-    private void saveCanceled(String title){
+    private void saveCanceled(String title,String motivo) {
         try {
             DatabaseReference mDatabaseReferencesRecordDay;
             String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -442,6 +466,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
                     .child(mi_telefono + "-" + currentTime);
             HashMap<String, Object> registro = new HashMap<>();
             registro.put("id_servicio", mi_telefono);
+            registro.put("motivo", motivo);
             registro.put("nombre_cliente", mi_nombre);
             registro.put("estado_servicio", mEstado);
             registro.put("nombre_conductor", mNombre_conductor.getText().toString());
@@ -454,7 +479,8 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
 
     @Override
     protected void onResume() {

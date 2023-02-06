@@ -198,7 +198,7 @@ public class pantalla_registro extends AppCompatActivity {
                             registro.put("foto", miFoto);
                             registro.put("nombre", mNombre.getText().toString());
                             registro.put("telefono", mTeleno_certificado);
-                            mEditor.putString("id_referido", newRef);
+                            registro.put("id_referido", newRef);
 
                             //datos requeridos por el sistema
                             registro.put("servicio", 0);

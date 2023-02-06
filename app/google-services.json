@@ -47,6 +47,14 @@
           }
         },
         {
+          "client_id": "360820139858-hafqnql8l3s5vhhh2na7vqgb50cfk0fg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.Onix",
+            "certificate_hash": "0234934168800646979142c98b26ba2615232ec8"
+          }
+        },
+        {
           "client_id": "360820139858-qsjgmancv7bhqnlpo49tp1jutf10mh34.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

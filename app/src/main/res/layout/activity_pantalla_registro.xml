@@ -156,6 +156,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="10dp"
+                    android:layout_margin="6dp"
                     app:srcCompat="@drawable/giftbox" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -169,7 +170,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/white"
-                        android:hint="Referido "
+                        android:hint="Ingrese codigo referido "
                         android:inputType="text"
                         android:textColorHint="@color/color_gris" />
 
