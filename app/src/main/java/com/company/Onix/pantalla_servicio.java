@@ -250,8 +250,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
         AtomicInteger selectItem = new AtomicInteger(); // cow
         builder.setSingleChoiceItems(array, checkedItem, (dialog, which) -> {
             // user checked an item
-            Log.e("which", array[checkedItem]);
-            selectItem.set(checkedItem);
+            selectItem.set(which);
         });
 
         // add OK and Cancel buttons

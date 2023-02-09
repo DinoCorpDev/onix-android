@@ -80,10 +80,10 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private GoogleMap.OnCameraIdleListener mCameraListener;
     private String mOrigen;
     private LatLng mOrigenLatLng;
-    private boolean mOriginSelect=true;
-    private  String mFijar_camara="no";
+    private boolean mOriginSelect = true;
+    private String mFijar_camara = "no";
     private String mCiudad_origen;
-    private  TextView mDireccion;
+    private TextView mDireccion;
     private LatLng mPosicionOriginal;
     private boolean mIsFristTime = true;
     private LinearLayout mMenu;
@@ -93,9 +93,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
-
-
-
 
 
     private TextInputEditText mNota;
@@ -108,13 +105,12 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private PlacesClient mPlaces;
 
 
-
     private String mi_telefono;
     private String mi_nombre;
-    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE= 5469;
+    public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
 
     //nuevas variebles
-    private  ImageView micono_central;
+    private ImageView micono_central;
     private ImageView micono_central_dos;
 
     private LinearLayout mVentana_origen;
@@ -128,7 +124,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     //prueba carga de vehiculos
     private GeofireProvider mGeofireProvider;
     private List<Marker> mDriversMarkers = new ArrayList<>();
-    private ArrayList<DriverLocation> mDriversLocation=new ArrayList<>();
+    private ArrayList<DriverLocation> mDriversLocation = new ArrayList<>();
 
     private DatabaseReference mData_servidor;
 
@@ -141,8 +137,8 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
     //variable api
-    private String mApi;
-    private String mActivar_buscador="no";
+    private String mApi, ciudad;
+    private String mActivar_buscador = "no";
 
     private TextView mDinero_bono;
 
@@ -150,7 +146,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private LinearLayout mBtn_regalo_nuevo;
 
     //variable bono
-    private String mActivar_bono="";
+    private String mActivar_bono = "";
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -176,7 +172,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                     }
 
 
-
                 }
             }
         }
@@ -197,16 +192,18 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         mVentana_origen = findViewById(R.id.cuadro_origen);
         mVentana_destino = findViewById(R.id.cuadro_destino);
         mSolicitar_detalle = findViewById(R.id.btn_solicar_detalle);
-        mDinero_bono=findViewById(R.id.dinero_bono);
-        mBtn_ubicar=findViewById(R.id.btn_ubicar);
-        mBtn_regalo_nuevo=findViewById(R.id.btn_regalo_nuevo);
+        mDinero_bono = findViewById(R.id.dinero_bono);
+        mBtn_ubicar = findViewById(R.id.btn_ubicar);
+        mBtn_regalo_nuevo = findViewById(R.id.btn_regalo_nuevo);
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+
         String telefono_bd = mPref.getString("telefono", "");
         String nombre = mPref.getString("nombre", "");
-        String ciudad=mPref.getString("mi_ciudad","");
-        if(ciudad.equals("")){
-        Intent intent=new Intent(plataforma.this,pantalla_ciudad.class);
-        startActivity(intent);
+        ciudad = mPref.getString("mi_ciudad", "");
+
+        if (ciudad.equals("")) {
+           // Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
+           // startActivity(intent);
         }
 
         mData_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
@@ -218,19 +215,18 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                     String version_apk = "20";
                     String version_conductor = snapshot.child("version_cliente").getValue().toString();
                     String link_apk = snapshot.child("playstore_usuario").getValue().toString();
-                    String mi_api=snapshot.child("a_api").getValue().toString();
-                    String activar_buscador=snapshot.child("activar_buscador").getValue().toString();
-                    mActivar_buscador=activar_buscador;
-                    String activar_bono=snapshot.child("activar_nuevo_bono").getValue().toString();
-                    mActivar_bono=activar_bono;
-                    mApi=mi_api;
+                    String mi_api = snapshot.child("a_api").getValue().toString();
+                    String activar_buscador = snapshot.child("activar_buscador").getValue().toString();
+                    mActivar_buscador = activar_buscador;
+                    String activar_bono = snapshot.child("activar_nuevo_bono").getValue().toString();
+                    mActivar_bono = activar_bono;
+                    mApi = mi_api;
 
                     instanceAutocompleteOrigin();
 
-                    if(mActivar_bono.equals("si")){
+                    if (mActivar_bono.equals("si")) {
                         mBtn_regalo_nuevo.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         mBtn_regalo_nuevo.setVisibility(View.INVISIBLE);
                     }
 
@@ -260,15 +256,15 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
             mi_telefono = telefono_bd;
             mi_nombre = nombre;
-            mData_servicio=FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
+            mData_servicio = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
             mData_servicio.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        String estado=snapshot.child("estado").getValue().toString();
-                        if(estado.equals("vip")){
-                            Intent intent=new Intent(plataforma.this, pantalla_esperando.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    if (snapshot.exists()) {
+                        String estado = snapshot.child("estado").getValue().toString();
+                        if (estado.equals("vip")) {
+                            Intent intent = new Intent(plataforma.this, pantalla_esperando.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.setAction(Intent.ACTION_RUN);
                             startActivity(intent);
                         }
@@ -280,142 +276,139 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
                 }
             });
-            mData_usuario=FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(telefono_bd);
+            mData_usuario = FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(telefono_bd);
             mData_usuario.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
-                        String verificacion=snapshot.child("verificacion").getValue().toString();
+                    if (snapshot.exists()) {
+                        String verificacion = snapshot.child("verificacion").getValue().toString();
 
-                        if(snapshot.hasChild("ciudad")){
+                        if (snapshot.hasChild("ciudad")) {
 
-                        }else {
-                            Intent intent=new Intent(plataforma.this,pantalla_ciudad.class);
+                        } else{
+                            Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
                             startActivity(intent);
                         }
 
-                        if(snapshot.hasChild("nombre")){
+                        if (snapshot.hasChild("nombre")) {
 
-                        }else {
+                        } else {
                             mData_usuario.removeValue();
-                            mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-                            mEditor=mPref.edit();
-                            mEditor.putString("pantalla","");
+                            mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+                            mEditor = mPref.edit();
+                            mEditor.putString("pantalla", "");
                             mEditor.apply();
-                            Intent intent=new Intent(plataforma.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Intent intent = new Intent(plataforma.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.setAction(Intent.ACTION_RUN);
                             startActivity(intent);
                         }
 
-                        if(verificacion.equals("suspendido")){
-                            mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-                            mEditor=mPref.edit();
+                        if (verificacion.equals("suspendido")) {
+                            mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+                            mEditor = mPref.edit();
 
-                            mEditor.putString("pantalla","");
+                            mEditor.putString("pantalla", "");
 
                             mEditor.apply();
 
                             Toast.makeText(plataforma.this, "cuenta eliminada por el admin", Toast.LENGTH_LONG).show();
-                            Intent intent=new Intent(plataforma.this, pantalla_supendido.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Intent intent = new Intent(plataforma.this, pantalla_supendido.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.setAction(Intent.ACTION_RUN);
                             startActivity(intent);
                         }
 
-                        if(snapshot.hasChild("nuevo_bono")){
-                            String mi_bono=snapshot.child("nuevo_bono").getValue().toString();
-                            mDinero_bono.setText("$ "+mi_bono);
+                        if (snapshot.hasChild("nuevo_bono")) {
+                            String mi_bono = snapshot.child("nuevo_bono").getValue().toString();
+                            mDinero_bono.setText("$ " + mi_bono);
 
 
-                            if(mi_bono.length()==1){
+                            if (mi_bono.length() == 1) {
 
 
-                                String pesos=mi_bono.substring(0,1);
+                                String pesos = mi_bono.substring(0, 1);
 
-                                mDinero_bono.setText("$ "+pesos);
+                                mDinero_bono.setText("$ " + pesos);
                             }
 
-                            if(mi_bono.length()>1){
+                            if (mi_bono.length() > 1) {
 
-                                String pesos=mi_bono.substring(0,2);
+                                String pesos = mi_bono.substring(0, 2);
 
-                                mDinero_bono.setText("$ "+pesos);
+                                mDinero_bono.setText("$ " + pesos);
                             }
 
-                            if(mi_bono.length()>2){
+                            if (mi_bono.length() > 2) {
 
-                                String pesos=mi_bono.substring(0,3);
+                                String pesos = mi_bono.substring(0, 3);
 
-                                mDinero_bono.setText("$ "+pesos);
+                                mDinero_bono.setText("$ " + pesos);
                             }
 
-                            if(mi_bono.length()>3){
-                                String miles= mi_bono.substring(0,1);
-                                String pesos=mi_bono.substring(1,4);
+                            if (mi_bono.length() > 3) {
+                                String miles = mi_bono.substring(0, 1);
+                                String pesos = mi_bono.substring(1, 4);
 
-                                mDinero_bono.setText("$ "+miles+"."+pesos);
-
+                                mDinero_bono.setText("$ " + miles + "." + pesos);
 
 
                             }
-                            if(mi_bono.length()>4){
+                            if (mi_bono.length() > 4) {
 
-                                String miles= mi_bono.substring(0,2);
-                                String pesos=mi_bono.substring(2,5);
+                                String miles = mi_bono.substring(0, 2);
+                                String pesos = mi_bono.substring(2, 5);
 
-                                mDinero_bono.setText("$ "+miles+"."+pesos);
-
-                            }
-                            if(mi_bono.length()>5){
-                                String miles= mi_bono.substring(0,3);
-                                String pesos=mi_bono.substring(3,6);
-
-                                mDinero_bono.setText("$ "+miles+"."+pesos);
+                                mDinero_bono.setText("$ " + miles + "." + pesos);
 
                             }
+                            if (mi_bono.length() > 5) {
+                                String miles = mi_bono.substring(0, 3);
+                                String pesos = mi_bono.substring(3, 6);
 
-
-                            if(mi_bono.length()>6){
-                                String millon=mi_bono.substring(0,1);
-                                String miles= mi_bono.substring(1,4);
-                                String pesos=mi_bono.substring(4,7);
-
-                                mDinero_bono.setText("$ "+millon+"."+miles+"."+pesos);
+                                mDinero_bono.setText("$ " + miles + "." + pesos);
 
                             }
 
 
+                            if (mi_bono.length() > 6) {
+                                String millon = mi_bono.substring(0, 1);
+                                String miles = mi_bono.substring(1, 4);
+                                String pesos = mi_bono.substring(4, 7);
+
+                                mDinero_bono.setText("$ " + millon + "." + miles + "." + pesos);
+
+                            }
 
 
-                            int mi_bono_numero=Integer.parseInt(mi_bono);
+                            int mi_bono_numero = Integer.parseInt(mi_bono);
 
-                            if(mActivar_bono.equals("si")){
+                            if (mActivar_bono.equals("si")) {
 
-                                if(mi_bono_numero>=1000){
+                                if (mi_bono_numero >= 1000) {
                                     //  Toast.makeText(plataforma.this, "Recuerda que tienes uno bono disponible de: "+mi_bono_numero+" pesos", Toast.LENGTH_LONG).show();
                                     mBtn_regalo_nuevo.setVisibility(View.VISIBLE);
-                                }else {
+                                } else {
                                     mBtn_regalo_nuevo.setVisibility(View.INVISIBLE);
                                 }
                             }
 
-                        }else {
-                            HashMap<String,Object> registro= new HashMap<>();
+                        } else {
+                            HashMap<String, Object> registro = new HashMap<>();
                             //datos normales
-                            registro.put("nuevo_bono",10000);
+                            registro.put("nuevo_bono", 10000);
                             mData_usuario.updateChildren(registro);
                             mDinero_bono.setText("$ 10.000");
                             mBtn_regalo_nuevo.setVisibility(View.VISIBLE);
 
                         }
-                    }else {
-                        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-                        mEditor=mPref.edit();
-                        mEditor.putString("pantalla","");
+                    } else {
+                        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+                        mEditor = mPref.edit();
+                        mEditor.putString("pantalla", "");
                         mEditor.apply();
-                        Intent intent=new Intent(plataforma.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        Intent intent = new Intent(plataforma.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setAction(Intent.ACTION_RUN);
                         startActivity(intent);
 
@@ -429,18 +422,9 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             });
 
 
-
-
-
-
-
-
-
-
-
-        }else {
-            Intent intent=new Intent(plataforma.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        } else {
+            Intent intent = new Intent(plataforma.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
 
             startActivity(intent);
@@ -449,7 +433,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         mBtn_regalo_nuevo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(plataforma.this,pantalla_regalo.class);
+                Intent intent = new Intent(plataforma.this, pantalla_regalo.class);
                 startActivity(intent);
             }
         });
@@ -457,8 +441,8 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         mBtn_ubicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mMap!=null){
-                    if(mCurrentLatLng.latitude!=0&& mCurrentLatLng.longitude!=0){
+                if (mMap != null) {
+                    if (mCurrentLatLng.latitude != 0 && mCurrentLatLng.longitude != 0) {
                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                                 new CameraPosition.Builder()
                                         .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
@@ -472,31 +456,28 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
 
 
-
-
-
-        mBtn_solicitar=findViewById(R.id.btn_solicitar);
+        mBtn_solicitar = findViewById(R.id.btn_solicitar);
         mBtn_solicitar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-                String nombre=mPref.getString("nombre","");
-                String telefono=mPref.getString("telefono","");
+                mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+                String nombre = mPref.getString("nombre", "");
+                String telefono = mPref.getString("telefono", "");
 
 
-                if(nombre.equals("")||telefono.equals("")){
-                    Intent intent =new Intent(plataforma.this,pantalla_principal.class);
+                if (nombre.equals("") || telefono.equals("")) {
+                    Intent intent = new Intent(plataforma.this, pantalla_principal.class);
                     startActivity(intent);
 
-                }else {
-                    mOriginSelect=false;
+                } else {
+                    mOriginSelect = false;
                     micono_central.setVisibility(View.INVISIBLE);
                     micono_central_dos.setVisibility(View.VISIBLE);
 
                     mVentana_origen.setVisibility(View.INVISIBLE);
                     mVentana_destino.setVisibility(View.VISIBLE);
-                    if(mDestinationLatLng!=null){
+                    if (mDestinationLatLng != null) {
                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                                 new CameraPosition.Builder()
                                         .target(mDestinationLatLng)
@@ -513,16 +494,15 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
 
 
-
-        mMenu=findViewById(R.id.btn_menu);
+        mMenu = findViewById(R.id.btn_menu);
         mMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(plataforma.this,pantalla_menu.class);
+                Intent intent = new Intent(plataforma.this, pantalla_menu.class);
                 startActivity(intent);
             }
         });
-        mDireccion=findViewById(R.id.mi_direccion);
+        mDireccion = findViewById(R.id.mi_direccion);
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -541,35 +521,33 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             @Override
             public void onClick(View v) {
 
-                if(mOrigenLatLng !=null && mDestinationLatLng!=null){
+                if (mOrigenLatLng != null && mDestinationLatLng != null) {
                     Intent intent = new Intent(plataforma.this, pantalla_detalle.class);
-                    intent.putExtra("origin_lat",mOrigenLatLng.latitude);
-                    intent.putExtra("origin_lng",mOrigenLatLng.longitude);
-                    intent.putExtra("destination_lat",mDestinationLatLng.latitude);
-                    intent.putExtra("destination_lng",mDestinationLatLng.longitude);
-                    intent.putExtra("origin",mOrigen);
-                    intent.putExtra("destination",mDestination);
-                    intent.putExtra("ciudad_origen",mCiudad_origen);
-                    intent.putExtra("activar_bono",mActivar_bono);
+                    intent.putExtra("origin_lat", mOrigenLatLng.latitude);
+                    intent.putExtra("origin_lng", mOrigenLatLng.longitude);
+                    intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+                    intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+                    intent.putExtra("origin", mOrigen);
+                    intent.putExtra("destination", mDestination);
+                    intent.putExtra("ciudad_origen", mCiudad_origen);
+                    intent.putExtra("activar_bono", mActivar_bono);
                     startActivity(intent);
                 }
             }
         });
 
 
-
-
     }
 
     @Override
     public void onBackPressed() {
-        mOriginSelect=true;
+        mOriginSelect = true;
         micono_central.setVisibility(View.VISIBLE);
         micono_central_dos.setVisibility(View.INVISIBLE);
 
         mVentana_origen.setVisibility(View.VISIBLE);
         mVentana_destino.setVisibility(View.INVISIBLE);
-        if(mOrigenLatLng!=null){
+        if (mOrigenLatLng != null) {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                     new CameraPosition.Builder()
                             .target(mOrigenLatLng)
@@ -604,89 +582,84 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     }
 
 
-    private void showAlertDialogoNOGPS(){
-        AlertDialog.Builder builder= new AlertDialog.Builder(this);
+    private void showAlertDialogoNOGPS() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Por favor activa tu ubicación para continuar")
                 .setPositiveButton("Configuraciòn", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),SETTINGS_REQUEST_CODE);
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), SETTINGS_REQUEST_CODE);
                     }
                 }).create().show();
     }
 
-    private boolean gpsActived(){
-        boolean isActive= false;
-        LocationManager locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if(locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)){
-            isActive= true;
+    private boolean gpsActived() {
+        boolean isActive = false;
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(locationManager.GPS_PROVIDER)) {
+            isActive = true;
 
         }
         return isActive;
     }
 
-    private void startLocation(){
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
+    private void startLocation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                if(gpsActived()){
+                if (gpsActived()) {
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     mMap.setMyLocationEnabled(true);
-                }
-                else{
+                } else {
                     showAlertDialogoNOGPS();
                 }
-            }
-            else{
+            } else {
                 checkLocationPermissions();
             }
 
-        }else {
+        } else {
             if (gpsActived()) {
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                 mMap.setMyLocationEnabled(true);
-            }
-            else {
+            } else {
                 showAlertDialogoNOGPS();
             }
         }
     }
 
-    private void checkLocationPermissions(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
+    private void checkLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(this).setTitle("Por favor proporciona los permisos de localizacion")
                         .setMessage("Esta aplicacion requiere de los permisos de ubicaciòn para poder utillizarse")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                ActivityCompat.requestPermissions(plataforma.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+                                ActivityCompat.requestPermissions(plataforma.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
                             }
                         })
                         .create()
                         .show();
-            }
-            else {
-                ActivityCompat.requestPermissions(plataforma.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
+            } else {
+                ActivityCompat.requestPermissions(plataforma.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
 
             }
         }
     }
 
 
-
-    private void  limitSearch(){
-        LatLng northSide= SphericalUtil.computeOffset(mCurrentLatLng,2000,0);
-        LatLng southSide= SphericalUtil.computeOffset(mCurrentLatLng,2000,180);
+    private void limitSearch() {
+        LatLng northSide = SphericalUtil.computeOffset(mCurrentLatLng, 2000, 0);
+        LatLng southSide = SphericalUtil.computeOffset(mCurrentLatLng, 2000, 180);
         mAutocomplete.setCountry("CO");
-        mAutocomplete.setLocationBias(RectangularBounds.newInstance(southSide,northSide));
+        mAutocomplete.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
 
         mAutocomplete_destino.setCountry("CO");
-        mAutocomplete_destino.setLocationBias(RectangularBounds.newInstance(southSide,northSide));
+        mAutocomplete_destino.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
 
 
     }
 
-    private void  instanceAutocompleteDestino(){
+    private void instanceAutocompleteDestino() {
         mAutocomplete_destino = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.place_destino);
         mAutocomplete_destino.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
         mAutocomplete_destino.setHint("Lugar De destino");
@@ -711,12 +684,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 ));
 
 
-
-
-
-
-
-
             }
 
             @Override
@@ -727,55 +694,48 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     }
 
 
-    private void  instanceAutocompleteOrigin(){
+    private void instanceAutocompleteOrigin() {
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeaAutocompleteOrigin);
         mAutocomplete.setHint("Lugar De Origen");
 
-            if(mActivar_buscador.equals("si")){
-                mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        if (mActivar_buscador.equals("si")) {
+            mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
 
-                mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                    @Override
-                    public void onPlaceSelected(@NonNull Place place) {
-
-
-                        mOrigen = place.getName();
-
-                        mOrigenLatLng = place.getLatLng();
-                        Log.d("PLACE", "Name" + mOrigen);
-                        Log.d("PLACE", "lat" + mOrigenLatLng.latitude);
-                        Log.d("PLACE", "lat" + mOrigenLatLng.longitude);
-                        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
-                                new CameraPosition.Builder()
-                                        .target(mOrigenLatLng)
-                                        .zoom(18f)
-                                        .build()
-
-                        ));
+            mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(@NonNull Place place) {
 
 
+                    mOrigen = place.getName();
 
-                    }
+                    mOrigenLatLng = place.getLatLng();
+                    Log.d("PLACE", "Name" + mOrigen);
+                    Log.d("PLACE", "lat" + mOrigenLatLng.latitude);
+                    Log.d("PLACE", "lat" + mOrigenLatLng.longitude);
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                                    .target(mOrigenLatLng)
+                                    .zoom(18f)
+                                    .build()
 
-                    @Override
-                    public void onError(@NonNull Status status) {
-
-                    }
-                });
-            }
+                    ));
 
 
+                }
 
+                @Override
+                public void onError(@NonNull Status status) {
+
+                }
+            });
+        }
 
 
     }
 
 
-
-
-
-    private void onCamereMove(){
-        if(mFijar_camara.equals("no")) {
+    private void onCamereMove() {
+        if (mFijar_camara.equals("no")) {
 
             mCameraListener = new GoogleMap.OnCameraIdleListener() {
                 @Override
@@ -792,7 +752,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
                             String numero_casa = addressList.get(0).getFeatureName();
                             String calle = addressList.get(0).getThoroughfare();
-
 
 
                             mCiudad_origen = city;
@@ -820,7 +779,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                             }
 
 
-                        }else {
+                        } else {
                             mDestinationLatLng = mMap.getCameraPosition().target;
                             List<Address> addressList = geocoder.getFromLocation(mDestinationLatLng.latitude, mDestinationLatLng.longitude, 1);
                             String city = addressList.get(0).getLocality();
@@ -849,7 +808,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     }
 
 
-
     public void permiso_super_poner() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
@@ -863,7 +821,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     //traer vehiculos
     private void getActiveDrivers() {
-        mGeofireProvider.getActiveDrivers(mCurrentLatLng,10).addGeoQueryEventListener(new GeoQueryEventListener() {
+        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 //añadir markadores de vehiculos
@@ -880,7 +838,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 marker.setTag(key);
                 mDriversMarkers.add(marker);
 
-                DriverLocation driverLocation=new DriverLocation();
+                DriverLocation driverLocation = new DriverLocation();
                 driverLocation.setId(key);
                 mDriversLocation.add(driverLocation);
 
@@ -910,21 +868,21 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 //actualizar vehiculos marcadores posicion
                 for (Marker marker : mDriversMarkers) {
 
-                    LatLng start= new LatLng(location.latitude,location.longitude);
-                    LatLng end=null;
+                    LatLng start = new LatLng(location.latitude, location.longitude);
+                    LatLng end = null;
 
-                    int position=getPositionDriver(marker.getTag().toString());
+                    int position = getPositionDriver(marker.getTag().toString());
 
                     if (marker.getTag() != null) {
                         if (marker.getTag().equals(key)) {
-                            if(mDriversLocation.get(position).getLatLng() !=null){
-                                end=mDriversLocation.get(position).getLatLng();
+                            if (mDriversLocation.get(position).getLatLng() != null) {
+                                end = mDriversLocation.get(position).getLatLng();
                             }
 
-                            mDriversLocation.get(position).setLatLng(new LatLng(location.latitude,location.longitude));
+                            mDriversLocation.get(position).setLatLng(new LatLng(location.latitude, location.longitude));
 
-                            if(end !=null){
-                                CarMoveAnim.carAnim(marker,end,start);
+                            if (end != null) {
+                                CarMoveAnim.carAnim(marker, end, start);
 
                             }
 
@@ -947,12 +905,13 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
 
     }
-    private int getPositionDriver(String id){
-        int position=0;
 
-        for(int i=0; i< mDriversLocation.size();i++){
-            if(id.equals(mDriversLocation.get(i).getId())){
-                position=i;
+    private int getPositionDriver(String id) {
+        int position = 0;
+
+        for (int i = 0; i < mDriversLocation.size(); i++) {
+            if (id.equals(mDriversLocation.get(i).getId())) {
+                position = i;
                 break;
             }
         }
