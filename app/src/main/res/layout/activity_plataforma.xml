@@ -249,7 +249,6 @@
             android:id="@+id/btn_new_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:background="@drawable/botones_redondos"
             android:backgroundTint="@color/places_autocomplete_error_button"

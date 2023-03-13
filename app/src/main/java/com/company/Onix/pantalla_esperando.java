@@ -104,7 +104,7 @@ public class pantalla_esperando extends AppCompatActivity {
         escucuchar_alertas();
 
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-        String telefono_bd = mPref.getString("telefono", "");
+        String telefono_bd = mPref.getString("telefono_s", "");
         String nombre = mPref.getString("nombre", "");
         ciudad = mPref.getString("mi_ciudad", "");
 

@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.company.Onix.Modelos.DriverLocation;
 import com.company.Onix.providers.GeofireProvider;
+import com.company.Onix.ui.ServicesActiveActivity;
 import com.company.Onix.utils.CarMoveAnim;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
@@ -90,10 +91,8 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     private Button mBtn_solicitar;
 
-
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
-
 
     private TextInputEditText mNota;
 
@@ -129,7 +128,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     private DatabaseReference mData_servicio;
     private DatabaseReference mData_postular;
-
 
     //nuevas variables
     private DatabaseReference mData_usuario;
@@ -246,7 +244,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
 
         if (!telefono_bd.equals("")) {
-            readServices(telefono_bd);
+            readServices();
             mi_telefono = telefono_bd;
             mi_nombre = nombre;
             mData_servicio = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
@@ -431,7 +429,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
 
         btn_new_request.setOnClickListener(v -> {
-            Intent intent = new Intent(plataforma.this, pantalla_regalo.class);
+            Intent intent=new Intent(plataforma.this, ServicesActiveActivity.class);
             startActivity(intent);
         });
 
@@ -554,7 +552,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     int indexServices = 0;
 
-    private void readServices(String phone) {
+    private void readServices() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child(ciudad)
                 .child("servicios");
@@ -564,7 +562,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 if (snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
                         String key = ds.getKey();
-                        if (key.contains(phone)) {
+                        if (key.contains(mi_telefono)) {
                             indexServices += 1;
                         }
                     }
@@ -605,7 +603,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
     }
-
 
     private void showAlertDialogoNOGPS() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -671,7 +668,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         }
     }
 
-
     private void limitSearch() {
         LatLng northSide = SphericalUtil.computeOffset(mCurrentLatLng, 2000, 0);
         LatLng southSide = SphericalUtil.computeOffset(mCurrentLatLng, 2000, 180);
@@ -718,7 +714,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
     }
 
-
     private void instanceAutocompleteOrigin() {
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeaAutocompleteOrigin);
         mAutocomplete.setHint("Lugar De Origen");
@@ -757,7 +752,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
     }
-
 
     private void onCamereMove() {
         if (mFijar_camara.equals("no")) {
@@ -831,7 +825,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         }
 
     }
-
 
     public void permiso_super_poner() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -41,6 +41,8 @@
         <activity android:name=".pantalla_registro" />
         <activity android:name=".pantalla_menu" />
         <activity android:name=".plataforma" />
+        <activity android:name=".ui.ServicesActiveActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

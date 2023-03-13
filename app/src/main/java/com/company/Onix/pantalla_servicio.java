@@ -102,10 +102,11 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
     private String mEstado;
     private String mprecio;
 
-    private CircleImageView mBtn_llamar_dos;
+    private CircleImageView mBtn_llamar_dos, btn_regresar_flecha;
     private static final int REQUEST_PERMISSION_CALL = 100;
 
     private CircleImageView mbtn_whatsapp;
+    private Button btn_home;
     private TextToSpeech cosa;
 
     private DatabaseReference mData_consulta_dos;
@@ -124,7 +125,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
         mGoogleApiProvider = new GoogleApiProvider(pantalla_servicio.this);
 
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-        String telefono_bd = mPref.getString("telefono", "");
+        String telefono_bd = mPref.getString("telefono_s", "");
         String nombre = mPref.getString("nombre", "");
         ciudad = mPref.getString("mi_ciudad", "");
 
@@ -133,28 +134,32 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
             mi_nombre = nombre;
             mData = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
             mData_tabla = FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd).child("tabla_aceptados");
-
-
             mData_estados = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
             mData_consulta_dos = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
             consulta_base();
-
-
         }
 
-
         mbtn_whatsapp = findViewById(R.id.btn_whatsap);
-        mbtn_whatsapp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mtelefono_conductor != null) {
-                    abrir_whatsapp(mtelefono_conductor);
-                } else {
-                    Toast.makeText(pantalla_servicio.this, "No se cargo el numero presiona de nuevo", Toast.LENGTH_SHORT).show();
-                }
-
+        mbtn_whatsapp.setOnClickListener(v -> {
+            if (mtelefono_conductor != null) {
+                abrir_whatsapp(mtelefono_conductor);
+            } else {
+                Toast.makeText(pantalla_servicio.this, "No se cargo el numero presiona de nuevo", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btn_regresar_flecha = findViewById(R.id.btn_regresar_flecha);
+        btn_regresar_flecha.setOnClickListener(v -> finish());
+
+        btn_home = findViewById(R.id.btn_home);
+        btn_home.setOnClickListener(v -> {
+            Intent intent = new Intent(pantalla_servicio.this, plataforma.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction(Intent.ACTION_RUN);
+            startActivity(intent);
+            finish();
+        });
+
         mMi_estado_servicio = findViewById(R.id.mi_estado_servicio);
         mNombre_conductor = findViewById(R.id.nombre_conductor);
         mVehiculo_conductor = findViewById(R.id.vehiculo);
@@ -256,7 +261,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
         // add OK and Cancel buttons
         builder.setPositiveButton("Aceptar", (dialog, which) -> {
             // user clicked OK
-            saveCanceled("customer_canceled",array[selectItem.get()]);
+            saveCanceled("customer_canceled", array[selectItem.get()]);
             parar_alertas();
             mData_estados.removeEventListener(mListener_estado);
             mData.removeValue();
@@ -400,7 +405,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
         AlertDialog.Builder builder = new AlertDialog.Builder(pantalla_servicio.this);
         builder.setMessage("¿Quieres buscar otro conductor?").setTitle("SERVICIO CANCELADO POR EL CONDUCTOR")
                 .setPositiveButton("SI", (dialogInterface, i) -> {
-                    saveCanceled("driver_canceled","SERVICIO CANCELADO POR EL CONDUCTOR");
+                    saveCanceled("driver_canceled", "SERVICIO CANCELADO POR EL CONDUCTOR");
                     Toast.makeText(pantalla_servicio.this, "ok buscaremos otro", Toast.LENGTH_SHORT).show();
                     mData_estados.removeEventListener(mListener_estado);
                     parar_alertas();
@@ -437,7 +442,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
 
 
                 }).setNegativeButton("NO", (dialog, which) -> {
-                    saveCanceled("driver_canceled","SERVICIO CANCELADO POR EL CONDUCTOR");
+                    saveCanceled("driver_canceled", "SERVICIO CANCELADO POR EL CONDUCTOR");
                     parar_alertas();
                     mData_estados.removeEventListener(mListener_estado);
                     mData.removeValue();
@@ -448,7 +453,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
         builder.show();
     }
 
-    private void saveCanceled(String title,String motivo) {
+    private void saveCanceled(String title, String motivo) {
         try {
             DatabaseReference mDatabaseReferencesRecordDay;
             String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -477,59 +482,58 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
     @Override
     protected void onResume() {
         super.onResume();
+        data_consulta_dos();
+    }
 
-        mData_consulta_dos.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    if (snapshot.hasChild("modo")) {
-                        micono = snapshot.child("modo").getValue().toString();
-                    } else {
-                        micono = "";
+    private void data_consulta_dos(){
+        if (mData_consulta_dos != null)
+            mData_consulta_dos.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+
+                        if (snapshot.hasChild("modo")) {
+                            micono = snapshot.child("modo").getValue().toString();
+                        } else {
+                            micono = "";
+                        }
+
+                        String estado = snapshot.child("estado").getValue().toString();
+                        String precio = snapshot.child("precio").getValue().toString();
+                        String descuento = snapshot.child("descuento").getValue().toString();
+                        int precio_numero = Integer.parseInt(precio);
+                        int decuento_numero = Integer.parseInt(descuento);
+                        int precio_pagar = precio_numero - decuento_numero;
+                        mprecio = String.valueOf(precio_pagar);
+                        mEstado = estado;
+
+                        if (estado.equals("El conductor cancelo el servicio")) {
+                            alerta_conductor_cancela();
+                        }
+
+                        if (estado.equals("cobrando")) {
+                            parar_alertas();
+                            mData_estados.removeEventListener(mListener_estado);
+                            mData_posicion_conductor.removeEventListener(mListener);
+                            mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+                            mEditor = mPref.edit();
+                            mEditor.putString("pantalla", "plataforma");
+                            mEditor.apply();
+                            Intent intent = new Intent(pantalla_servicio.this, pantalla_cobro.class);
+                            intent.putExtra("id_publi", mtelefono_conductor);
+                            intent.putExtra("precio", mprecio);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setAction(Intent.ACTION_RUN);
+                            startActivity(intent);
+                        }
                     }
+                }
 
-                    String estado = snapshot.child("estado").getValue().toString();
-
-                    String precio = snapshot.child("precio").getValue().toString();
-                    String descuento = snapshot.child("descuento").getValue().toString();
-                    int precio_numero = Integer.parseInt(precio);
-                    int decuento_numero = Integer.parseInt(descuento);
-                    int precio_pagar = precio_numero - decuento_numero;
-
-                    mprecio = String.valueOf(precio_pagar);
-
-                    mEstado = estado;
-                    if (estado.equals("El conductor cancelo el servicio")) {
-                        alerta_conductor_cancela();
-                    }
-
-
-                    if (estado.equals("cobrando")) {
-                        parar_alertas();
-                        mData_estados.removeEventListener(mListener_estado);
-                        mData_posicion_conductor.removeEventListener(mListener);
-                        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-                        mEditor = mPref.edit();
-                        mEditor.putString("pantalla", "plataforma");
-                        mEditor.apply();
-                        Intent intent = new Intent(pantalla_servicio.this, pantalla_cobro.class);
-                        intent.putExtra("id_publi", mtelefono_conductor);
-                        intent.putExtra("precio", mprecio);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.setAction(Intent.ACTION_RUN);
-                        startActivity(intent);
-                    }
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
+            });
     }
 
     private void consulta_base() {
