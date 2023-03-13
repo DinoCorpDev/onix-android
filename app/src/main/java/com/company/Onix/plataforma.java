@@ -566,7 +566,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                             indexServices += 1;
                         }
                     }
-                    if(indexServices > 1){
+                    if(indexServices > 0){
                         btn_new_request.setVisibility(View.VISIBLE);
                         btn_new_request.setText("Mis servicios ("+indexServices+")");
                     }else {
