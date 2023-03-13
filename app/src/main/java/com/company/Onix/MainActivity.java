@@ -22,6 +22,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MainActivity extends AppCompatActivity {
 
     SharedPreferences mPref;
@@ -110,44 +116,71 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void iniciar_sistema() {
+    int indexServices=0;
+    private void readServices() {
 
-        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
+        String ciudad = mPref.getString("mi_ciudad", "");
+        String telefono_bd = mPref.getString("telefono", "");
         String pantalla=mPref.getString("pantalla","");
 
-        if(!pantalla.equals("")){
-            if(pantalla.equals("plataforma")){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child(ciudad)
+                .child("servicios");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String key = ds.getKey();
+                        if (key.contains(telefono_bd)) {
+                            indexServices += 1;
+                        }
+                    }
 
-                Intent intent=new Intent(MainActivity.this, plataforma.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setAction(Intent.ACTION_RUN);
+                    if(!pantalla.equals("")){
 
-                startActivity(intent);
+                        if(pantalla.equals("plataforma")){
+                            Intent intent=new Intent(MainActivity.this, plataforma.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setAction(Intent.ACTION_RUN);
+                            startActivity(intent);
+                        }
+
+                        if (pantalla.equals("servicio") && indexServices == 1){
+                            Intent intent=new Intent(MainActivity.this, pantalla_servicio.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setAction(Intent.ACTION_RUN);
+                            startActivity(intent);
+                        }else if(indexServices > 1){
+                            Intent intent=new Intent(MainActivity.this, plataforma.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setAction(Intent.ACTION_RUN);
+                            startActivity(intent);
+                        }
+
+                        if (pantalla.equals("registro")){
+                            Intent intent=new Intent(MainActivity.this, pantalla_registro.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setAction(Intent.ACTION_RUN);
+                            startActivity(intent);
+                        }
+                    }else {
+                        Intent intent =new Intent(MainActivity.this,verificacion.class);
+                        startActivity(intent);
+                    }
+                }
             }
-            if (pantalla.equals("servicio")){
 
-                Intent intent=new Intent(MainActivity.this, pantalla_servicio.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setAction(Intent.ACTION_RUN);
-
-                startActivity(intent);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-            if (pantalla.equals("registro")){
+        });
+    }
 
-                Intent intent=new Intent(MainActivity.this, pantalla_registro.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setAction(Intent.ACTION_RUN);
-
-                startActivity(intent);
-
-            }
-        }else {
-
-            Intent intent =new Intent(MainActivity.this,verificacion.class);
-            startActivity(intent);
-        }
-
+    private void iniciar_sistema() {
+        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
+        readServices();
     }
 
     private void checkLocationPermissions(){

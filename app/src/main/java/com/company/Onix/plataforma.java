@@ -104,7 +104,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private Marker mMarker;
     private PlacesClient mPlaces;
 
-
     private String mi_telefono;
     private String mi_nombre;
     public static int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469;
@@ -119,7 +118,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private LatLng mDestinationLatLng;
     private String mDestination;
 
-    private Button mSolicitar_detalle;
+    private Button mSolicitar_detalle, btn_new_request;
 
     //prueba carga de vehiculos
     private GeofireProvider mGeofireProvider;
@@ -153,9 +152,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
-
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
                     if (mIsFristTime) {
                         getActiveDrivers();
                         mIsFristTime = false;
@@ -165,18 +162,13 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                                         .target(new LatLng(location.getLatitude(), location.getLongitude()))
                                         .zoom(18f)
                                         .build()
-
                         ));
 
-
                     }
-
 
                 }
             }
         }
-
-
     };
 
 
@@ -192,6 +184,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         mVentana_origen = findViewById(R.id.cuadro_origen);
         mVentana_destino = findViewById(R.id.cuadro_destino);
         mSolicitar_detalle = findViewById(R.id.btn_solicar_detalle);
+        btn_new_request = findViewById(R.id.btn_new_request);
         mDinero_bono = findViewById(R.id.dinero_bono);
         mBtn_ubicar = findViewById(R.id.btn_ubicar);
         mBtn_regalo_nuevo = findViewById(R.id.btn_regalo_nuevo);
@@ -202,8 +195,8 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         ciudad = mPref.getString("mi_ciudad", "");
 
         if (ciudad.equals("")) {
-           // Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
-           // startActivity(intent);
+            Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
+            startActivity(intent);
         }
 
         mData_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
@@ -253,7 +246,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
 
         if (!telefono_bd.equals("")) {
-
+            readServices(telefono_bd);
             mi_telefono = telefono_bd;
             mi_nombre = nombre;
             mData_servicio = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
@@ -285,7 +278,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
                         if (snapshot.hasChild("ciudad")) {
 
-                        } else{
+                        } else {
                             Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
                             startActivity(intent);
                         }
@@ -426,7 +419,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             Intent intent = new Intent(plataforma.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
-
             startActivity(intent);
         }
 
@@ -438,19 +430,21 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             }
         });
 
-        mBtn_ubicar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mMap != null) {
-                    if (mCurrentLatLng.latitude != 0 && mCurrentLatLng.longitude != 0) {
-                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                                new CameraPosition.Builder()
-                                        .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
-                                        .zoom(18f)
-                                        .build()
+        btn_new_request.setOnClickListener(v -> {
+            Intent intent = new Intent(plataforma.this, pantalla_regalo.class);
+            startActivity(intent);
+        });
 
-                        ));
-                    }
+        mBtn_ubicar.setOnClickListener(v -> {
+            if (mMap != null) {
+                if (mCurrentLatLng.latitude != 0 && mCurrentLatLng.longitude != 0) {
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                                    .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
+                                    .zoom(18f)
+                                    .build()
+
+                    ));
                 }
             }
         });
@@ -556,7 +550,38 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
             ));
         }
+    }
 
+    int indexServices = 0;
+
+    private void readServices(String phone) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child(ciudad)
+                .child("servicios");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String key = ds.getKey();
+                        if (key.contains(phone)) {
+                            indexServices += 1;
+                        }
+                    }
+                    if(indexServices > 1){
+                        btn_new_request.setVisibility(View.VISIBLE);
+                        btn_new_request.setText("Mis servicios ("+indexServices+")");
+                    }else {
+                        btn_new_request.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override

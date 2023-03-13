@@ -293,6 +293,7 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                                 String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                 //End create date sebas
 
+
                                 DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
                                 HashMap<String, Object> registro = new HashMap<>();
                                 registro.put("nota", comentario);
@@ -343,11 +344,35 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     }
 
+    int indexServices = 0;
+
+    private void readServices(String phone) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child(mCiudad)
+                .child("servicios");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        String key = ds.getKey();
+                        if (key.contains(phone)) {
+                            indexServices += 1;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-
     }
 
 

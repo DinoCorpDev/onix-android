@@ -235,7 +235,6 @@
 
         </LinearLayout>
 
-
         <Button
             android:id="@+id/btn_solicitar"
             android:layout_width="match_parent"
@@ -244,9 +243,19 @@
             android:layout_marginTop="10dp"
             android:backgroundTint="@color/purple_200"
             android:textColor="@color/black"
-
-
             android:text="SIGUIENTE"/>
+
+        <Button
+            android:id="@+id/btn_new_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/places_autocomplete_error_button"
+            android:text="Mis servicios"
+            android:textColor="@color/white" />
+
 
     </LinearLayout>
 
