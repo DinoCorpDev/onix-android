@@ -202,7 +202,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-
                     String version_apk = "20";
                     String version_conductor = snapshot.child("version_cliente").getValue().toString();
                     String link_apk = snapshot.child("playstore_usuario").getValue().toString();
@@ -223,24 +222,18 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
                     if (!version_conductor.equals(version_apk)) {
                         Toast.makeText(plataforma.this, "Actualizar sistema", Toast.LENGTH_LONG).show();
-
                         Intent intent = new Intent(plataforma.this, pantalla_actualizacion.class);
                         intent.putExtra("link_apk", link_apk);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setAction(Intent.ACTION_RUN);
-
                         startActivity(intent);
-
                     }
-
-
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {}
 
-            }
         });
 
         if (!telefono_bd.equals("")) {
@@ -402,7 +395,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setAction(Intent.ACTION_RUN);
                         startActivity(intent);
-
                     }
                 }
 
@@ -441,7 +433,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                                     .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
                                     .zoom(18f)
                                     .build()
-
                     ));
                 }
             }
@@ -461,12 +452,10 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 if (nombre.equals("") || telefono.equals("")) {
                     Intent intent = new Intent(plataforma.this, pantalla_principal.class);
                     startActivity(intent);
-
                 } else {
                     mOriginSelect = false;
                     micono_central.setVisibility(View.INVISIBLE);
                     micono_central_dos.setVisibility(View.VISIBLE);
-
                     mVentana_origen.setVisibility(View.INVISIBLE);
                     mVentana_destino.setVisibility(View.VISIBLE);
                     if (mDestinationLatLng != null) {
@@ -475,13 +464,9 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                                         .target(mDestinationLatLng)
                                         .zoom(18f)
                                         .build()
-
                         ));
                     }
-
                 }
-
-
             }
         });
 
@@ -494,6 +479,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 startActivity(intent);
             }
         });
+
         mDireccion = findViewById(R.id.mi_direccion);
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
 
@@ -509,26 +495,20 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
         onCamereMove();
 
-        mSolicitar_detalle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mOrigenLatLng != null && mDestinationLatLng != null) {
-                    Intent intent = new Intent(plataforma.this, pantalla_detalle.class);
-                    intent.putExtra("origin_lat", mOrigenLatLng.latitude);
-                    intent.putExtra("origin_lng", mOrigenLatLng.longitude);
-                    intent.putExtra("destination_lat", mDestinationLatLng.latitude);
-                    intent.putExtra("destination_lng", mDestinationLatLng.longitude);
-                    intent.putExtra("origin", mOrigen);
-                    intent.putExtra("destination", mDestination);
-                    intent.putExtra("ciudad_origen", mCiudad_origen);
-                    intent.putExtra("activar_bono", mActivar_bono);
-                    startActivity(intent);
-                }
+        mSolicitar_detalle.setOnClickListener(v -> {
+            if (mOrigenLatLng != null && mDestinationLatLng != null) {
+                Intent intent = new Intent(plataforma.this, pantalla_detalle.class);
+                intent.putExtra("origin_lat", mOrigenLatLng.latitude);
+                intent.putExtra("origin_lng", mOrigenLatLng.longitude);
+                intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+                intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+                intent.putExtra("origin", mOrigen);
+                intent.putExtra("destination", mDestination);
+                intent.putExtra("ciudad_origen", mCiudad_origen);
+                intent.putExtra("activar_bono", mActivar_bono);
+                startActivity(intent);
             }
         });
-
-
     }
 
     @Override
@@ -566,12 +546,12 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                             indexServices += 1;
                         }
                     }
-                    if(indexServices > 0){
-                        btn_new_request.setVisibility(View.VISIBLE);
-                        btn_new_request.setText("Mis servicios ("+indexServices+")");
-                    }else {
-                        btn_new_request.setVisibility(View.GONE);
-                    }
+                }
+                if(indexServices > 0){
+                    btn_new_request.setVisibility(View.VISIBLE);
+                    btn_new_request.setText("Mis servicios ("+indexServices+")");
+                }else {
+                    btn_new_request.setVisibility(View.GONE);
                 }
             }
 

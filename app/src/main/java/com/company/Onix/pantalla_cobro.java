@@ -35,56 +35,63 @@ public class pantalla_cobro extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_cobro);
-        mPrecio=findViewById(R.id.precio_servicio);
-        id_publi=getIntent().getStringExtra("id_publi");
-        precio=getIntent().getStringExtra("precio");
-        mPrecio.setText(precio+" COP");
 
-        mComentario=findViewById(R.id.comentario);
-        mNombre_conductor=findViewById(R.id.nombre_conductor_cobro);
-        mBtn_finalizar=findViewById(R.id.btn_finalizar);
+        mPrecio = findViewById(R.id.precio_servicio);
+        id_publi = getIntent().getStringExtra("id_publi");
+        precio = getIntent().getStringExtra("precio");
+        mPrecio.setText(precio + " COP");
 
-        mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-        String nombre_bd=mPref.getString("nombre","");
+        mComentario = findViewById(R.id.comentario);
+        mNombre_conductor = findViewById(R.id.nombre_conductor_cobro);
+        mBtn_finalizar = findViewById(R.id.btn_finalizar);
 
-        String telefono_bd=mPref.getString("telefono","");
-        if(!nombre_bd.equals("")&& !telefono_bd.equals("")){
+        mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
+        String nombre_bd = mPref.getString("nombre", "");
+        String telefono_bd = mPref.getString("telefono_s", "");
+        String ciudad = mPref.getString("mi_ciudad", "");
 
+        if (!nombre_bd.equals("") && !telefono_bd.equals("")) {
             mNombre_conductor.setText(nombre_bd);
-
         }
-        mBtn_finalizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String Guardar_comentario= mComentario.getText().toString();
-                if(id_publi!=null){
-                    mData= FirebaseDatabase.getInstance().getReference().child("registros").child("conductores").child(id_publi).child("historial_comentarios").child(telefono_bd);
-                    mData_servicio = FirebaseDatabase.getInstance().getReference().child("servicios").child(telefono_bd);
-                    mData_servicio.removeValue();
-                    if(!Guardar_comentario.equals("")){
-                        HashMap<String,Object> registro= new HashMap<>();
-                        registro.put("mensaje","enviado");
-                        registro.put("nota",Guardar_comentario);
-                        //acutalizamos el registro con update children
-                        mData.setValue(registro);
 
-                    }
+        mBtn_finalizar.setOnClickListener(v -> {
 
+            String Guardar_comentario = mComentario.getText().toString();
+
+            if (id_publi != null) {
+
+                mData = FirebaseDatabase.getInstance().getReference()
+                        .child("registros")
+                        .child("conductores")
+                        .child(id_publi)
+                        .child("historial_comentarios")
+                        .child(telefono_bd);
+
+                mData_servicio = FirebaseDatabase.getInstance().getReference()
+                        .child(ciudad)
+                        .child("servicios")
+                        .child(telefono_bd);
+
+                mData_servicio.removeValue();
+
+                if (!Guardar_comentario.equals("")) {
+                    HashMap<String, Object> registro = new HashMap<>();
+                    registro.put("mensaje", "enviado");
+                    registro.put("nota", Guardar_comentario);
+                    //acutalizamos el registro con update children
+                    mData.setValue(registro);
                 }
-
-
-
-                Intent intent=new Intent(pantalla_cobro.this, plataforma.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.setAction(Intent.ACTION_RUN);
-
-                startActivity(intent);
             }
+
+            Intent intent = new Intent(pantalla_cobro.this, plataforma.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setAction(Intent.ACTION_RUN);
+            startActivity(intent);
+
         });
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {}
 
-    }
 }

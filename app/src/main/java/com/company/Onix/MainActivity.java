@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
@@ -49,28 +50,9 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Por varo verifica tu conexion a internet", Toast.LENGTH_LONG).show();
         }
 
-
         mBtn_ingresar = findViewById(R.id.btn_ingresar);
+        mBtn_ingresar.setOnClickListener(v -> iniciar_sistema());
 
-        mBtn_ingresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                if (networkInfo != null && networkInfo.isConnected()) {
-                    startLocation();
-                } else {
-                    Toast.makeText(MainActivity.this, "Por favor  verifica tu conexion a internet", Toast.LENGTH_LONG).show();
-                }
-
-
-
-
-
-            }
-        });
     }
 
 
@@ -98,17 +80,14 @@ public class MainActivity extends AppCompatActivity {
     private void startLocation(){
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
                 iniciar_sistema();
             }
             else{
                 checkLocationPermissions();
             }
-
         }else {
             if (gpsActived()) {
                 iniciar_sistema();
-
             }
             else {
                 showAlertDialogoNOGPS();
@@ -136,38 +115,37 @@ public class MainActivity extends AppCompatActivity {
                             indexServices += 1;
                         }
                     }
+                }
+                if(!pantalla.equals("")){
 
-                    if(!pantalla.equals("")){
-
-                        if(pantalla.equals("plataforma")){
-                            Intent intent=new Intent(MainActivity.this, plataforma.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.setAction(Intent.ACTION_RUN);
-                            startActivity(intent);
-                        }
-
-                        if (pantalla.equals("servicio") && indexServices == 1){
-                            Intent intent=new Intent(MainActivity.this, pantalla_servicio.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.setAction(Intent.ACTION_RUN);
-                            startActivity(intent);
-                        }else if(indexServices > 1){
-                            Intent intent=new Intent(MainActivity.this, plataforma.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.setAction(Intent.ACTION_RUN);
-                            startActivity(intent);
-                        }
-
-                        if (pantalla.equals("registro")){
-                            Intent intent=new Intent(MainActivity.this, pantalla_registro.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.setAction(Intent.ACTION_RUN);
-                            startActivity(intent);
-                        }
-                    }else {
-                        Intent intent =new Intent(MainActivity.this,verificacion.class);
+                    if(pantalla.equals("plataforma")){
+                        Intent intent=new Intent(MainActivity.this, plataforma.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setAction(Intent.ACTION_RUN);
                         startActivity(intent);
                     }
+
+                    if (pantalla.equals("servicio") && indexServices == 1){
+                        Intent intent=new Intent(MainActivity.this, pantalla_servicio.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setAction(Intent.ACTION_RUN);
+                        startActivity(intent);
+                    }else if(indexServices > 1){
+                        Intent intent=new Intent(MainActivity.this, plataforma.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setAction(Intent.ACTION_RUN);
+                        startActivity(intent);
+                    }
+
+                    if (pantalla.equals("registro")){
+                        Intent intent=new Intent(MainActivity.this, pantalla_registro.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.setAction(Intent.ACTION_RUN);
+                        startActivity(intent);
+                    }
+                }else {
+                    Intent intent =new Intent(MainActivity.this,verificacion.class);
+                    startActivity(intent);
                 }
             }
 
