@@ -3,6 +3,7 @@ package com.company.Onix.Modelos;
 public class Service {
 
     String key;
+    String status;
 
     String direccion;
     String nombre;
@@ -17,6 +18,14 @@ public class Service {
     String precio;
 
     public Service() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Service(String direccion, String nombre, String nota, String destino, String kilometros, String minutos, double lat, double lng, double lat_destino, double lng_destino, String precio) {

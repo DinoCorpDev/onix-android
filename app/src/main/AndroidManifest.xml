@@ -18,9 +18,11 @@
         android:roundIcon="@mipmap/logo_cliente_final"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity
-            android:name=".ServicesActiveActivity"
+            android:name=".ui.ServicesActiveActivity"
             android:exported="false" />
+
         <activity android:name=".pantalla_regalo" />
         <activity android:name=".buscar_direcciones" />
         <activity android:name=".pantalla_pedir_servicio_uno" />

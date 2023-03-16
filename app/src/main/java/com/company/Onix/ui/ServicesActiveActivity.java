@@ -80,6 +80,7 @@ public class ServicesActiveActivity extends AppCompatActivity {
                             service.setDestino(datasnapshot.child("destino").getValue(String.class));
                             service.setKilometros(datasnapshot.child("kilometros").getValue(String.class));
                             service.setPrecio(datasnapshot.child("precio").getValue(String.class));
+                            service.setStatus(datasnapshot.child("estado").getValue(String.class));
                             localDataSet.add(service);
                         }
                         mAdaptar_tabla_normal = new ServiceAdapter();

@@ -26,6 +26,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
         private final TextView destino_pasajero;
         private final TextView kilometros_tarjeta_dos;
         private final TextView pasajero_paga;
+        private final TextView textView_status;
 
         public ViewHolder(View view) {
             super(view);
@@ -34,6 +35,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
             destino_pasajero = (TextView) view.findViewById(R.id.destino_pasajero);
             kilometros_tarjeta_dos = (TextView) view.findViewById(R.id.kilometros_tarjeta_dos);
             pasajero_paga = (TextView) view.findViewById(R.id.pasajero_paga);
+            textView_status = (TextView) view.findViewById(R.id.textView_status);
         }
 
         public TextView getTextViewOrigen() {
@@ -50,6 +52,10 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
 
         public TextView getTextViewValue() {
             return pasajero_paga;
+        }
+
+        public TextView getTextViewStatus() {
+            return textView_status;
         }
 
         @Override
@@ -88,6 +94,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
         viewHolder.getTextViewDestination().setText(localDataSet.get(position).getDestino());
         viewHolder.getTextViewKm().setText(localDataSet.get(position).getKilometros());
         viewHolder.getTextViewValue().setText(localDataSet.get(position).getPrecio());
+        viewHolder.getTextViewStatus().setText(localDataSet.get(position).getStatus());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -97,17 +97,17 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
+                android:background="@android:color/darker_gray"
                 android:orientation="horizontal">
 
-
-            </LinearLayout>
+            </View>
 
 
             <LinearLayout
@@ -149,6 +149,40 @@
                     android:textSize="13dp"
                     android:textStyle="bold" />
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:paddingBottom="0dp"
+                    android:text="Estado:"
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/textView_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:maxLines="1"
+                    android:paddingBottom="0dp"
+                    android:text="..."
+                    android:textColor="@color/black"
+                    android:textSize="16dp" />
 
             </LinearLayout>
 

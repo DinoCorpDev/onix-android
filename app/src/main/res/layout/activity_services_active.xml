@@ -25,7 +25,8 @@
             android:id="@+id/tabla_normal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            tools:listitem="@layout/tarjeta_normal"/>
 
     </LinearLayout>
 
