@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".pantalla_terminos">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="30dp">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+
+            >
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:elevation="20dp"
+                app:shape_arc_cropDirection="outside"
+                app:shape_arc_height="20dp"
+                app:shape_arc_position="bottom"
+                >
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@color/color_botones_dos" />
+
+                <TextView
+                    android:id="@+id/textViewNameBookingDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textAlignment="center"
+                    android:textColor="@color/color_blanco"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/btn_regresar_flecha"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_arrow_back"
+                    android:layout_gravity="left|top"
+                    app:civ_border_width="3dp"
+                    app:civ_border_color="#F0F0F0"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="10dp"/>
+
+            </com.github.florent37.shapeofview.shapes.ArcView>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="25sp"
+                android:layout_marginRight="25sp"
+                android:layout_marginTop="10dp"
+
+                android:orientation="vertical">
+
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imagen_conductor"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center|top"
+                    app:civ_border_width="5dp"
+
+                    app:civ_border_color="@color/color_blanco"
+                    android:src="@drawable/logo_empresa"/>
+
+
+
+
+
+                <TextView
+                    android:id="@+id/nombre"
+                    android:paddingTop="20dp"
+                    android:textAllCaps="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
+                    android:text="TERMINOS Y CONDICIONES"/>
+                <TextView
+                    android:id="@+id/nombre_conductor"
+                    android:textAllCaps="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Información"/>
+
+
+
+
+
+
+
+                <TextView
+                    android:layout_marginTop="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="25dp"
+                    android:gravity="center"
+                    android:text="Privacidad"/>
+
+                <TextView
+                    android:layout_marginTop="10dp"
+
+                    android:textAllCaps="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/privacidad"
+                    android:textSize="50px"/>
+
+
+                <TextView
+                    android:layout_marginTop="25dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="25sp"
+                    android:gravity="center"
+                    android:text="Ubicaciòn"/>
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/vehiculo_conductor"
+                    android:textAllCaps="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Si el usuario lo permite, recopilamos datos de ubicación precisos o aproximados de su dispositivo móvil. En el caso de los Conductores, ONIX recopila esta información cuando la App de ONIX se ejecuta en primer plano (App abierta y en pantalla) o en segundo plano (App abierta, pero no en pantalla) de su dispositivo móvil. En el caso de los usuarios o clientes, ONIX recopila estos datos cuando la App de ONIX se ejecuta en primer plano. Esta información también puede recopilarse cuando la app de ONIX se ejecuta en segundo plano en el dispositivo móvil del usuario...."
+                    android:textSize="50px"/>
+
+                <TextView
+
+                    android:textAllCaps="false"
+                    android:paddingTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="50px"
+                    android:text="Si quieres mas informacion visita nuestra pagina web."/>
+
+
+
+
+
+
+
+
+                <Button
+                    android:id="@+id/btn_regresar_terminos_dos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+
+                    android:background="@drawable/botones_redondos"
+                    android:backgroundTint="@color/purple_200"
+                    android:text="REGRESAR"
+                    android:textColor="@color/color_blanco"
+
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp"/>
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

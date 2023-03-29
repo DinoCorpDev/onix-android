@@ -17,146 +17,193 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp"
+            android:padding="5dp"
             android:layout_gravity="center"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/caja_gris"
-                android:padding="10dp"
 
-                android:orientation="horizontal">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/cuadro_cobro"
+                android:orientation="horizontal"
+                app:contentPadding="20dp"
+                app:cardBackgroundColor="@color/color_blanco"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="15dp">
+
+
 
                 <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/logo_empresa"/>
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/flagcol"/>
+                <TextView
+                    android:id="@+id/thanks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:paddingTop="5dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:text="GRACIAS POR APOYAR EL TALENTO COLOMBIANO!"/>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/cuadro_cobro"
+                android:orientation="vertical"
+                app:contentPadding="25dp"
+                app:cardBackgroundColor="@color/color_blanco"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="15dp">
 
                 <TextView
-                    android:layout_gravity="center"
-                    android:gravity="left"
-                    android:layout_marginLeft="10dp"
+                    android:id="@+id/nombre_conductor_cobro"
+                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:text="COBRANDO SERVICIO"/>
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/nombre_conductor_cobro"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textAllCaps="true"
-                android:text="cargando.."/>
-            <TextView
-                android:layout_marginTop="0dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Gracias por usar nuestro servicio"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="17dp">
-
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:text="cargando.."/>
                 <TextView
-                    android:layout_width="155dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="47dp"
-                    android:text="Soporte tecnico 24/7 al:"/>
+                    android:text="No olvides recomendarnos con tus amigos y familiares :)"/>
+
 
                 <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:text="3242751460"
+                    android:layout_marginTop="70dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_marginTop="45dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:text="PRECIO DEL SERVICIO"/>
-
-            <TextView
-                android:id="@+id/precio_servicio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:text="cargando..."/>
-
-
-
-
-
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:text="VALOR A PAGAR:"/>
 
                 <TextView
-                    android:layout_marginTop="50dp"
+                    android:id="@+id/precio_servicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="25dp"
+                    android:layout_marginTop="90dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:text="cargando..."/>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/cuadro_cobro"
+                android:orientation="vertical"
+                app:contentPadding="25dp"
+                app:cardBackgroundColor="@color/color_blanco"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="15dp">
+
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="¿QUE TAL TE PARECIO EL CONDUCTOR?"/>
+                    android:text="¿QUE TAL TE PARECIO EL CONDUCTOR?"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/comentario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
                     android:hint="Dejar comentario"
-                    android:gravity="center"
-                    android:inputType="text"/>
-
-                <TextView
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:text="Gracias"/>
-
+                    android:inputType="text"
+                    android:minHeight="48dp"
+                    android:textSize="15dp" />
                 <Button
                     android:id="@+id/btn_finalizar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="95dp"
                     android:background="@drawable/botones_redondos"
                     android:backgroundTint="@color/color_botones_dos"
                     android:textColor="@color/black"
                     android:text="FINALIZAR"
                     />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="160dp"
+                    >
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:text="Soporte tecnico 24/7 al:"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="3009777955"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
 
         </LinearLayout>
 
 
     </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
 
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-2515959700929202/4939367222">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

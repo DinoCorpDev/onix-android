@@ -7,61 +7,62 @@
     tools:context=".pantalla_esperando">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
-        android:gravity="center"
-        android:padding="15dp"
         android:background="@color/blanco_transparente"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:visibility="visible">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
             android:gravity="center"
-            android:textSize="15dp"
+            android:text="CONDUCTORES QUE ACEPTARON EL SERVICIO"
             android:textColor="@color/white"
 
-            android:text="CONDUCTORES QUE ACEPTARON EL SERVICIO"/>
+            android:textSize="15dp" />
+
         <TextView
             android:layout_width="match_parent"
-            android:gravity="center"
-            android:textSize="14dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Por favor seleccione un conductor"
             android:textColor="@color/white"
-            android:text="Por favor seleccione un conductor"/>
+            android:textSize="14dp" />
+
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_marginBottom="60dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="60dp">
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_gravity="top"
                 android:id="@+id/contenedor_historial"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-                />
+                android:layout_gravity="top"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 
         </ScrollView>
-
-
-
-
-
 
 
     </LinearLayout>
     <Button
         android:layout_gravity="bottom"
         android:id="@+id/btn_cancelar_espera"
-        android:layout_marginTop="15dp"
+        android:layout_marginBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/botones_redondos"
         android:backgroundTint="@color/purple_700"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:textColor="@color/black"
         android:text="CANCELAR SERVICIO"></Button>
 
@@ -70,130 +71,168 @@
         android:id="@+id/ventan_encima"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
         android:layout_gravity="center"
-        android:gravity="center"
         android:background="@color/white"
-        android:orientation="vertical">
-        <com.airbnb.lottie.LottieAnimationView
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="center">
+
+        <!-- <com.airbnb.lottie.LottieAnimationView
 
             android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="200dp"
             app:lottie_rawRes="@raw/animacion_moto"
             app:lottie_loop="true"
-            app:lottie_autoPlay="true"/>
+            app:lottie_autoPlay="true"/> -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:text="¡IMPORTANTE!"
             android:textColor="@color/black"
-            android:text="BUSCANDO CONDUCTORES.."/>
+            android:textSize="45px"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="70dp"
+            android:text="Si ya no necesitas el servicio puedes cancelarlo o cerrar la app y esta cancelara el servicio automaticamente."
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BUSCANDO CONDUCTORES.."
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:text="Por favor espere"/>
+            android:text="Por favor espere" />
 
         <TextView
 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="0dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
             android:layout_marginBottom="30dp"
+            android:text="PRECIO DEL SERVICIO"
 
-            android:text="PRECIO DEL SERVICIO"/>
+            android:textColor="@color/black" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Precio actual"/>
-
+            android:text="Precio actual" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_bajar_precio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/botones_redondos_tres"
+                android:background="@drawable/botones_redondos"
                 android:backgroundTint="@color/gris_super_claro"
                 android:radius="15dp"
 
-                android:text="-500"/>
+                android:text="-500" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="0dp"
                 android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
                 android:orientation="vertical">
-
-
-
 
 
                 <TextView
                     android:id="@+id/valore_total"
-                    android:layout_marginTop="0dp"
-                    android:textSize="18dp"
-                    android:layout_marginLeft="15sp"
-                    android:layout_marginRight="15sp"
-                    android:textColor="@color/black"
-                    android:textAllCaps="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="cargandoo"/>
+                    android:layout_marginLeft="15sp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="15sp"
+                    android:text="cargandoo"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black"
+                    android:textSize="18dp" />
 
             </LinearLayout>
-
 
 
             <Button
                 android:id="@+id/btn_subir_precio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/botones_redondos_tres"
+                android:background="@drawable/botones_redondos"
                 android:backgroundTint="@color/purple_700"
-                android:textColor="@color/black"
-                android:text="+500"/>
+                android:text="+500"
+                android:textColor="@color/black" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="30dp"
+            android:layout_marginRight="40dp"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/btn_aceptar_subida"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/botones_redondos_tres"
+                android:background="@drawable/botones_redondos"
                 android:backgroundTint="@color/gris_super_claro"
 
-                android:paddingRight="25dp"
                 android:paddingLeft="25dp"
-                android:textAllCaps="false"
+                android:paddingRight="25dp"
+                android:text="Aumentar precio"
 
-                android:text="Aumentar precio"/>
+                android:textAllCaps="false" />
 
         </LinearLayout>
 
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
 
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-2515959700929202/4939367222">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

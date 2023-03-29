@@ -9,11 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
+
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class pantalla_cobro extends AppCompatActivity {
     private TextView mNombre_conductor;
@@ -31,6 +38,9 @@ public class pantalla_cobro extends AppCompatActivity {
     private DatabaseReference mData;
     private DatabaseReference mData_servicio;
 
+    //variable ADS
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +53,19 @@ public class pantalla_cobro extends AppCompatActivity {
         mComentario=findViewById(R.id.comentario);
         mNombre_conductor=findViewById(R.id.nombre_conductor_cobro);
         mBtn_finalizar=findViewById(R.id.btn_finalizar);
+
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Funcion google ADS
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
 
         mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
         String nombre_bd=mPref.getString("nombre","");

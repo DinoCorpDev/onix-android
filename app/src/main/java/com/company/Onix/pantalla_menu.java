@@ -14,6 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.company.Onix.services.servicio_pantallas;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +50,8 @@ public class pantalla_menu extends AppCompatActivity {
 
     private CircleImageView mFoto;
 
-
+    //variable ADS
+    private AdView mAdView;
 
 
     @Override
@@ -79,6 +85,17 @@ public class pantalla_menu extends AppCompatActivity {
         mBtn_cerrar_aplicacion=findViewById(R.id.btn_salir);
         mBtn_cerrar_sesion=findViewById(R.id.btn_cerrar_sesion);
 
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Funcion google ADS
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference().child("a_servidor");
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {

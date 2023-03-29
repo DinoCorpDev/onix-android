@@ -49,6 +49,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCallback {
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
@@ -112,7 +118,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
     private String micono;
 
     private DatabaseReference mDatabase_cuatro;
-
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +147,17 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
 
 
         }
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Funcion google ADS
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         mbtn_whatsapp = findViewById(R.id.btn_whatsap);
@@ -250,8 +267,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
         AtomicInteger selectItem = new AtomicInteger(); // cow
         builder.setSingleChoiceItems(array, checkedItem, (dialog, which) -> {
             // user checked an item
-            Log.e("which", array[checkedItem]);
-            selectItem.set(checkedItem);
+            selectItem.set(which);
         });
 
         // add OK and Cancel buttons
@@ -300,7 +316,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
                     mEstado = estado;
                     mMi_estado_servicio.setText(estado);
 
-                    if (estado.equals("confirmado")) {
+                    /*if (estado.equals("confirmado")) {
                         cosa = new TextToSpeech(getBaseContext(), new TextToSpeech.OnInitListener() {
                             @Override
                             public void onInit(int status) {
@@ -362,7 +378,7 @@ public class pantalla_servicio extends AppCompatActivity implements OnMapReadyCa
                             }
                         });
 
-                    }
+                    }*/
 
                     if (estado.equals("El conductor cancelo el servicio")) {
 

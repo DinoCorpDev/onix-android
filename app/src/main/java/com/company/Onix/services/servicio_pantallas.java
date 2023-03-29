@@ -45,7 +45,7 @@ public class servicio_pantallas extends Service {
         String nombre=mPref.getString("nombre","");
         String ciudad=mPref.getString("mi_ciudad", "");
 
-        if(!telefono_bd.equals("")){
+        /*if(!telefono_bd.equals("")){
             mi_telefono=telefono_bd;
             mi_nombre=nombre;
             mData=FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
@@ -135,7 +135,7 @@ public class servicio_pantallas extends Service {
             });
 
 
-        }
+        }*/
 
 
     }
@@ -150,9 +150,9 @@ public class servicio_pantallas extends Service {
 
 
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID)
-                .setSmallIcon(R.drawable.icon_car)
-                .setContentTitle("ONIX usuario")
-                .setContentText("Servicio")
+                .setSmallIcon(R.drawable.onix_icono2)
+                .setContentTitle("ONIX")
+                .setContentText("Facil y rapido")
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();
@@ -186,9 +186,9 @@ public class servicio_pantallas extends Service {
         NotificationCompat.Builder builder= new NotificationCompat.Builder(this,CHANNEL_ID);
         Notification notification = builder
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.icon_car)
-                .setContentTitle("ONIX usuario")
-                .setContentText("Servicio")
+                .setSmallIcon(R.drawable.onix_icono2)
+                .setContentTitle("ONIX")
+                .setContentText("Facil y rapido")
                 .setPriority(NotificationManager.IMPORTANCE_HIGH)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();

@@ -165,33 +165,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-               android:gravity="center"
-                android:layout_marginTop="10dp">
 
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-
-                    android:src="@drawable/ic_compartir"/>
-
-                <Button
-                    android:id="@+id/btn_compartir"
-                    android:paddingLeft="10dp"
-                    android:textAllCaps="false"
-                    android:gravity="left"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:text="Compartir aplicación"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -336,26 +310,57 @@
                     android:text="Apagar aplicación"/>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible">
 
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+
+                    android:src="@drawable/ic_compartir"/>
+
+                <Button
+                    android:id="@+id/btn_compartir"
+                    android:paddingLeft="10dp"
+                    android:textAllCaps="false"
+                    android:gravity="left"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:text="Compartir aplicación"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-
-
-
-
-
-
-
-
-
-
-
     </LinearLayout>
 
-
-
-
-
     </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-2515959700929202/4939367222">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
