@@ -41,7 +41,7 @@ public class servicio_pantallas extends Service {
         super.onCreate();
 
         mPref=getApplicationContext().getSharedPreferences("sessiones",MODE_PRIVATE);
-        String telefono_bd=mPref.getString("telefono","");
+        String telefono_bd=mPref.getString("telefono_s","");
         String nombre=mPref.getString("nombre","");
         String ciudad=mPref.getString("mi_ciudad", "");
 

@@ -91,17 +91,11 @@ public class pantalla_esperando extends AppCompatActivity {
                         HashMap<String, Object> registro = new HashMap<>();
                         registro.put("estado", "esperando");
                         mData.updateChildren(registro);
-
                         handler.removeCallbacks(runnable);
                     }
                 }
-
-
             }
-
         }
-
-
     };
 
     @Override
@@ -112,7 +106,7 @@ public class pantalla_esperando extends AppCompatActivity {
         escucuchar_alertas();
 
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-        String telefono_bd = mPref.getString("telefono", "");
+        String telefono_bd = mPref.getString("telefono_s", "");
         String nombre = mPref.getString("nombre", "");
         ciudad = mPref.getString("mi_ciudad", "");
 
@@ -260,7 +254,10 @@ public class pantalla_esperando extends AppCompatActivity {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(linearLayoutManager);
 
-            Query query = FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd)
+            Query query = FirebaseDatabase.getInstance().getReference()
+                    .child(ciudad)
+                    .child("postulaciones")
+                    .child(telefono_bd)
                     .child("tabla_aceptados")
                     .orderByChild("km_reales")
                     .startAt(0.0);
@@ -281,7 +278,7 @@ public class pantalla_esperando extends AppCompatActivity {
                             }
                         });
                     } else {
-                        mVentana_encima.setVisibility(View.VISIBLE);
+                       mVentana_encima.setVisibility(View.VISIBLE);
                     }
                 }
 

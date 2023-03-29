@@ -53,9 +53,10 @@
 
 
     </LinearLayout>
+
     <Button
-        android:layout_gravity="bottom"
         android:id="@+id/btn_cancelar_espera"
+<<<<<<< HEAD
         android:layout_marginBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,6 +66,15 @@
         android:layout_marginRight="20dp"
         android:textColor="@color/black"
         android:text="CANCELAR SERVICIO"></Button>
+=======
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/purple_700"
+        android:text="CANCELAR SERVICIO"
+        android:textColor="@color/black" />
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
 
 
     <LinearLayout
@@ -75,17 +85,23 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
+<<<<<<< HEAD
         android:visibility="visible"
         app:layout_anchor="@+id/linearLayout"
         app:layout_anchorGravity="center">
 
         <!-- <com.airbnb.lottie.LottieAnimationView
+=======
+        android:visibility="visible">
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
 
-            android:layout_gravity="center"
+    <com.airbnb.lottie.LottieAnimationView
             android:layout_width="200dp"
             android:layout_height="200dp"
-            app:lottie_rawRes="@raw/animacion_moto"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
             app:lottie_loop="true"
+<<<<<<< HEAD
             app:lottie_autoPlay="true"/> -->
 
         <TextView
@@ -96,10 +112,14 @@
             android:textSize="45px"
             android:textStyle="bold" />
 
+=======
+            app:lottie_rawRes="@raw/animacion_moto" />
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginBottom="70dp"
@@ -109,6 +129,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+=======
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
             android:text="BUSCANDO CONDUCTORES.."
             android:textColor="@color/black"
             android:textStyle="bold" />

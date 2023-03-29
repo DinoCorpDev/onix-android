@@ -13,12 +13,26 @@
     <application
         android:allowBackup="true"
         android:exported="true"
+<<<<<<< HEAD
         android:icon="@mipmap/onix_icon_new"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/onix_icon_new"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".pantalla_regalo"></activity>
+=======
+        android:icon="@mipmap/logo_cliente_final"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/logo_cliente_final"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <activity
+            android:name=".ui.ServicesActiveActivity"
+            android:exported="false" />
+
+        <activity android:name=".pantalla_regalo" />
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
         <activity android:name=".buscar_direcciones" />
         <activity android:name=".pantalla_pedir_servicio_uno" />
         <activity android:name=".pantalla_pedir_servicio" />
@@ -38,6 +52,11 @@
         <activity android:name=".pantalla_registro" />
         <activity android:name=".pantalla_menu" />
         <activity android:name=".plataforma" />
+<<<<<<< HEAD
+=======
+        <activity android:name=".ui.ServicesActiveActivity" />
+
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -53,6 +72,7 @@
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="dataSync" />
+<<<<<<< HEAD
         <service android:name=".services.MyFirebaseMessagingClient"
             android:exported="true">
             <intent-filter>
@@ -65,12 +85,19 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/white" />
+=======
+
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
+<<<<<<< HEAD
             android:value="ca-app-pub-2515959700929202~3480502828" />
+=======
+            android:value="ca-app-pub-2635132313890897~1263458787" />
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
     </application>
 
 </manifest>

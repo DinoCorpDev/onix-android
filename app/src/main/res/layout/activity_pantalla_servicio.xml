@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -228,4 +229,225 @@
 
 
 
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".pantalla_servicio">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="20dp"
+        app:cardBackgroundColor="@color/color_blanco"
+        app:cardCornerRadius="20dp"
+        app:contentPadding="15dp">
+
+        <TextView
+            android:id="@+id/mi_estado_servicio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="estado del servicio"
+            android:textAllCaps="true"
+            android:textColor="@android:color/black" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/btn_regresar_flecha"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_flecha_atras_negra"
+        app:civ_border_color="@color/black"
+        app:civ_border_width="3dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="25dp"
+        android:orientation="vertical">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/btn_whatsap"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/color_blanco"
+            android:padding="5dp"
+            android:src="@drawable/ic_whatsapp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginBottom="25dp"
+
+
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/color_blanco"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="WhatsApp" />
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/btn_llamar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/color_blanco"
+            android:padding="5dp"
+            android:src="@drawable/ic_llamar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginBottom="25dp"
+
+
+            android:background="@drawable/botones_redondos"
+            android:backgroundTint="@color/color_blanco"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Llamar" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_blanco"
+            android:padding="12dp">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imagen_conductor_servicio"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="7dp"
+                    android:src="@drawable/logo_empresa"
+                    app:civ_border_color="@color/color_blanco"
+                    app:civ_border_width="3dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/nombre_conductor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="10dp"
+                        android:maxLines="1"
+
+                        android:text="cargando..."
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/vehiculo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:maxLines="2"
+                        android:text="cargando.."
+                        android:textAllCaps="true"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/placa_conductor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+
+                        android:layout_marginTop="2dp"
+                        android:maxLines="2"
+                        android:text="cargando.."
+                        android:textAllCaps="true"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_blanco"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:background="@drawable/botones_redondos"
+                android:backgroundTint="@color/purple_700"
+                android:gravity="center"
+                android:text="Nuevo servicio"
+                android:textColor="@color/color_blanco" />
+
+            <Button
+                android:id="@+id/btn_cancelar_servicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:background="@drawable/botones_redondos"
+                android:backgroundTint="@color/red"
+                android:gravity="center"
+                android:text="CANCELAR SERVICIO"
+                android:textColor="@color/color_blanco" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+>>>>>>> e60555398cae704a1471f6f204f64b9696c358c2
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
