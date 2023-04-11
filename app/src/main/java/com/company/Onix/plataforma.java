@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.company.Onix.Modelos.DriverLocation;
 import com.company.Onix.providers.GeofireProvider;
-import com.company.Onix.ui.ServicesActiveActivity;
 import com.company.Onix.utils.CarMoveAnim;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
@@ -69,6 +68,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class plataforma extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -91,8 +98,10 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     private Button mBtn_solicitar;
 
+
     SharedPreferences mPref;
     SharedPreferences.Editor mEditor;
+
 
     private TextInputEditText mNota;
 
@@ -102,6 +111,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     private Marker mMarker;
     private PlacesClient mPlaces;
+
 
     private String mi_telefono;
     private String mi_nombre;
@@ -117,7 +127,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private LatLng mDestinationLatLng;
     private String mDestination;
 
-    private Button mSolicitar_detalle, btn_new_request;
+    private Button mSolicitar_detalle;
 
     //prueba carga de vehiculos
     private GeofireProvider mGeofireProvider;
@@ -128,6 +138,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
     private DatabaseReference mData_servicio;
     private DatabaseReference mData_postular;
+
 
     //nuevas variables
     private DatabaseReference mData_usuario;
@@ -142,6 +153,16 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
     private LinearLayout mBtn_ubicar;
     private LinearLayout mBtn_regalo_nuevo;
 
+    //variable ADS
+    private AdView mAdView;
+
+    //variable mensajeria
+    private CircleImageView mbtn_mensajeria;
+
+    //telefono soporte
+    private String Telefono_mensajeria;
+
+
     //variable bono
     private String mActivar_bono = "";
 
@@ -150,7 +171,9 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
+
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
                     if (mIsFristTime) {
                         getActiveDrivers();
                         mIsFristTime = false;
@@ -160,13 +183,18 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                                         .target(new LatLng(location.getLatitude(), location.getLongitude()))
                                         .zoom(18f)
                                         .build()
+
                         ));
 
+
                     }
+
 
                 }
             }
         }
+
+
     };
 
 
@@ -182,7 +210,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         mVentana_origen = findViewById(R.id.cuadro_origen);
         mVentana_destino = findViewById(R.id.cuadro_destino);
         mSolicitar_detalle = findViewById(R.id.btn_solicar_detalle);
-        btn_new_request = findViewById(R.id.btn_new_request);
         mDinero_bono = findViewById(R.id.dinero_bono);
         mBtn_ubicar = findViewById(R.id.btn_ubicar);
         mBtn_regalo_nuevo = findViewById(R.id.btn_regalo_nuevo);
@@ -193,15 +220,27 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         ciudad = mPref.getString("mi_ciudad", "");
 
         if (ciudad.equals("")) {
-            Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
-            startActivity(intent);
+           // Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
+           // startActivity(intent);
         }
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Funcion google ADS
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         mData_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
         mData_servidor.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+
                     String version_apk = "20";
                     String version_conductor = snapshot.child("version_cliente").getValue().toString();
                     String link_apk = snapshot.child("playstore_usuario").getValue().toString();
@@ -211,7 +250,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                     String activar_bono = snapshot.child("activar_nuevo_bono").getValue().toString();
                     mActivar_bono = activar_bono;
                     mApi = mi_api;
-
+                    Telefono_mensajeria=snapshot.child("soporte_conductor").getValue().toString();
                     instanceAutocompleteOrigin();
 
                     if (mActivar_bono.equals("si")) {
@@ -222,22 +261,40 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
                     if (!version_conductor.equals(version_apk)) {
                         Toast.makeText(plataforma.this, "Actualizar sistema", Toast.LENGTH_LONG).show();
+
                         Intent intent = new Intent(plataforma.this, pantalla_actualizacion.class);
                         intent.putExtra("link_apk", link_apk);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setAction(Intent.ACTION_RUN);
+
                         startActivity(intent);
+
                     }
+
+
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
         });
 
+
+        mbtn_mensajeria = findViewById(R.id.btn_mensajeria);
+        mbtn_mensajeria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+" + Telefono_mensajeria + "&text=Soy%20cliente%20de%20ONIX%20necesito%20servicio%20de%20mensajeria");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+
         if (!telefono_bd.equals("")) {
-            readServices();
+
             mi_telefono = telefono_bd;
             mi_nombre = nombre;
             mData_servicio = FirebaseDatabase.getInstance().getReference().child(ciudad).child("servicios").child(telefono_bd);
@@ -269,7 +326,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
                         if (snapshot.hasChild("ciudad")) {
 
-                        } else {
+                        } else{
                             Intent intent = new Intent(plataforma.this, pantalla_ciudad.class);
                             startActivity(intent);
                         }
@@ -395,6 +452,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.setAction(Intent.ACTION_RUN);
                         startActivity(intent);
+
                     }
                 }
 
@@ -409,6 +467,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             Intent intent = new Intent(plataforma.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
+
             startActivity(intent);
         }
 
@@ -420,20 +479,19 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
             }
         });
 
-        btn_new_request.setOnClickListener(v -> {
-            Intent intent=new Intent(plataforma.this, ServicesActiveActivity.class);
-            startActivity(intent);
-        });
+        mBtn_ubicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap != null) {
+                    if (mCurrentLatLng.latitude != 0 && mCurrentLatLng.longitude != 0) {
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition.Builder()
+                                        .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
+                                        .zoom(18f)
+                                        .build()
 
-        mBtn_ubicar.setOnClickListener(v -> {
-            if (mMap != null) {
-                if (mCurrentLatLng.latitude != 0 && mCurrentLatLng.longitude != 0) {
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                            new CameraPosition.Builder()
-                                    .target(new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude))
-                                    .zoom(18f)
-                                    .build()
-                    ));
+                        ));
+                    }
                 }
             }
         });
@@ -452,10 +510,12 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 if (nombre.equals("") || telefono.equals("")) {
                     Intent intent = new Intent(plataforma.this, pantalla_principal.class);
                     startActivity(intent);
+
                 } else {
                     mOriginSelect = false;
                     micono_central.setVisibility(View.INVISIBLE);
                     micono_central_dos.setVisibility(View.VISIBLE);
+
                     mVentana_origen.setVisibility(View.INVISIBLE);
                     mVentana_destino.setVisibility(View.VISIBLE);
                     if (mDestinationLatLng != null) {
@@ -464,9 +524,13 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                                         .target(mDestinationLatLng)
                                         .zoom(18f)
                                         .build()
+
                         ));
                     }
+
                 }
+
+
             }
         });
 
@@ -479,7 +543,6 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
                 startActivity(intent);
             }
         });
-
         mDireccion = findViewById(R.id.mi_direccion);
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
 
@@ -495,20 +558,26 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
         onCamereMove();
 
-        mSolicitar_detalle.setOnClickListener(v -> {
-            if (mOrigenLatLng != null && mDestinationLatLng != null) {
-                Intent intent = new Intent(plataforma.this, pantalla_detalle.class);
-                intent.putExtra("origin_lat", mOrigenLatLng.latitude);
-                intent.putExtra("origin_lng", mOrigenLatLng.longitude);
-                intent.putExtra("destination_lat", mDestinationLatLng.latitude);
-                intent.putExtra("destination_lng", mDestinationLatLng.longitude);
-                intent.putExtra("origin", mOrigen);
-                intent.putExtra("destination", mDestination);
-                intent.putExtra("ciudad_origen", mCiudad_origen);
-                intent.putExtra("activar_bono", mActivar_bono);
-                startActivity(intent);
+        mSolicitar_detalle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mOrigenLatLng != null && mDestinationLatLng != null) {
+                    Intent intent = new Intent(plataforma.this, pantalla_detalle.class);
+                    intent.putExtra("origin_lat", mOrigenLatLng.latitude);
+                    intent.putExtra("origin_lng", mOrigenLatLng.longitude);
+                    intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+                    intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+                    intent.putExtra("origin", mOrigen);
+                    intent.putExtra("destination", mDestination);
+                    intent.putExtra("ciudad_origen", mCiudad_origen);
+                    intent.putExtra("activar_bono", mActivar_bono);
+                    startActivity(intent);
+                }
             }
         });
+
+
     }
 
     @Override
@@ -528,38 +597,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
             ));
         }
-    }
 
-    int indexServices = 0;
-
-    private void readServices() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                .child(ciudad)
-                .child("servicios");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        String key = ds.getKey();
-                        if (key.contains(mi_telefono)) {
-                            indexServices += 1;
-                        }
-                    }
-                }
-                if(indexServices > 0){
-                    btn_new_request.setVisibility(View.VISIBLE);
-                    btn_new_request.setText("Mis servicios ("+indexServices+")");
-                }else {
-                    btn_new_request.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     @Override
@@ -583,6 +621,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
     }
+
 
     private void showAlertDialogoNOGPS() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -648,6 +687,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         }
     }
 
+
     private void limitSearch() {
         LatLng northSide = SphericalUtil.computeOffset(mCurrentLatLng, 2000, 0);
         LatLng southSide = SphericalUtil.computeOffset(mCurrentLatLng, 2000, 180);
@@ -694,6 +734,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         });
     }
 
+
     private void instanceAutocompleteOrigin() {
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeaAutocompleteOrigin);
         mAutocomplete.setHint("Lugar De Origen");
@@ -732,6 +773,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
 
 
     }
+
 
     private void onCamereMove() {
         if (mFijar_camara.equals("no")) {
@@ -805,6 +847,7 @@ public class plataforma extends AppCompatActivity implements OnMapReadyCallback 
         }
 
     }
+
 
     public void permiso_super_poner() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

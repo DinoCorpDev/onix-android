@@ -232,7 +232,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="invisible"
+        android:visibility="visible"
         android:id="@+id/btn_soporte_ingreso"
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
@@ -250,12 +250,12 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:gravity="right"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="25dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="Soporte tecnico"/>
+            android:gravity="right"
+            android:text="Soporte tecnico"
+            android:textColor="@color/black" />
     </LinearLayout>
 
 

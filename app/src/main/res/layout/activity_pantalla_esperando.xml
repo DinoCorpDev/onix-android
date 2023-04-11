@@ -7,6 +7,7 @@
     tools:context=".pantalla_esperando">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/blanco_transparente"
@@ -52,16 +53,18 @@
 
 
     </LinearLayout>
-
     <Button
+        android:layout_gravity="bottom"
         android:id="@+id/btn_cancelar_espera"
+        android:layout_marginBottom="60dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="15dp"
+        android:background="@drawable/botones_redondos"
         android:backgroundTint="@color/purple_700"
-        android:text="CANCELAR SERVICIO"
-        android:textColor="@color/black" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/black"
+        android:text="CANCELAR SERVICIO"></Button>
 
 
     <LinearLayout
@@ -72,15 +75,36 @@
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        app:layout_anchor="@+id/linearLayout"
+        app:layout_anchorGravity="center">
 
-    <com.airbnb.lottie.LottieAnimationView
+        <!-- <com.airbnb.lottie.LottieAnimationView
+
+            android:layout_gravity="center"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_gravity="center"
-            app:lottie_autoPlay="true"
+            app:lottie_rawRes="@raw/animacion_moto"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/animacion_moto" />
+            app:lottie_autoPlay="true"/> -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¡IMPORTANTE!"
+            android:textColor="@color/black"
+            android:textSize="45px"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="70dp"
+            android:text="Si ya no necesitas el servicio puedes cancelarlo o cerrar la app y esta cancelara el servicio automaticamente."
+            android:textAlignment="center" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -124,7 +148,7 @@
                 android:id="@+id/btn_bajar_precio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/botones_redondos_tres"
+                android:background="@drawable/botones_redondos"
                 android:backgroundTint="@color/gris_super_claro"
                 android:radius="15dp"
 
@@ -160,7 +184,7 @@
                 android:id="@+id/btn_subir_precio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/botones_redondos_tres"
+                android:background="@drawable/botones_redondos"
                 android:backgroundTint="@color/purple_700"
                 android:text="+500"
                 android:textColor="@color/black" />
@@ -179,7 +203,7 @@
                 android:id="@+id/btn_aceptar_subida"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/botones_redondos_tres"
+                android:background="@drawable/botones_redondos"
                 android:backgroundTint="@color/gris_super_claro"
 
                 android:paddingLeft="25dp"
@@ -192,5 +216,23 @@
 
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
 
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-2515959700929202/4939367222">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

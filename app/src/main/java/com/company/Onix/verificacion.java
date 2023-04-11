@@ -117,7 +117,7 @@ public class verificacion extends AppCompatActivity {
         mBtn_soporte_ingreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+57" + "3117942922" + "&text=Hola%20soy%20cliente%20de%20onix%20tengo%20problemas%20para%20ingresar:%20mi%20número%20es:"+mNumero_telefono.getText().toString());
+                Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+57" + "3009777955" + "&text=Hola%20soy%20cliente%20de%20ONIX%20tengo%20problemas%20para%20ingresar");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
@@ -140,7 +140,7 @@ public class verificacion extends AppCompatActivity {
                         mVentana_celular.setVisibility(View.INVISIBLE);
                         mVentana_codigo.setVisibility(View.INVISIBLE);
                         enviar_numero(numero);
-                        Toast.makeText(verificacion.this, "comprobando número", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(verificacion.this, "Comprobando número", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -250,7 +250,7 @@ public class verificacion extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(verificacion.this, "Ingresando a onix", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(verificacion.this, "Ingresando a onix", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = task.getResult().getUser();
                             // Update UI
 
@@ -282,7 +282,7 @@ public class verificacion extends AppCompatActivity {
 
                                         mEditor.apply();
                                         progressDialog.dismiss();
-                                        Toast.makeText(verificacion.this, "Ingresando a la plataforma", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(verificacion.this, "Ingresando a la plataforma", Toast.LENGTH_SHORT).show();
                                         Intent intent=new Intent(verificacion.this, plataforma.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         intent.setAction(Intent.ACTION_RUN);

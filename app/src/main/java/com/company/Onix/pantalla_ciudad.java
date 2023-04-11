@@ -12,6 +12,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,6 +29,10 @@ public class pantalla_ciudad extends AppCompatActivity {
     SharedPreferences.Editor mEditor;
     private DatabaseReference mData_usuario;
     private String mTelefono;
+
+    //variable ADS
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +43,18 @@ public class pantalla_ciudad extends AppCompatActivity {
         adapter_cuatro.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner_ciudad.setAdapter(adapter_cuatro);
         mPref = getApplication().getSharedPreferences("sessiones", Context.MODE_PRIVATE);
+
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Funcion google ADS
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         String telefono_bd = mPref.getString("telefono", "");
         if(!telefono_bd.equals("")){

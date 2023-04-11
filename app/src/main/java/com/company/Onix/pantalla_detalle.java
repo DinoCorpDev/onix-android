@@ -150,14 +150,11 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_detalle);
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Calculando tarifa por favor espere");
         progressDialog.show();
-
         // seguridad del conductor variables locales
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-        mEditor = mPref.edit();
         String ciudad = mPref.getString("mi_ciudad", "");
         String telefono_bd = mPref.getString("telefono", "");
         String nombre_bd = mPref.getString("nombre", "");
@@ -168,7 +165,10 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
         mBase_servidor = FirebaseDatabase.getInstance().getReference().child("a_servidor");
+
+
         mMi_bono = findViewById(R.id.mi_bono);
 
         if (telefono_bd.equals("") || telefono_bd == null) {
@@ -176,14 +176,12 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
             Intent intent = new Intent(pantalla_detalle.this, pantalla_principal.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction(Intent.ACTION_RUN);
-            startActivity(intent);
-        } else {
-            readServices(telefono_bd);
-            mData_usuario_detalle = FirebaseDatabase.getInstance().getReference()
-                    .child("registros")
-                    .child("usuarios")
-                    .child(telefono_bd);
 
+            startActivity(intent);
+
+        } else {
+
+            mData_usuario_detalle = FirebaseDatabase.getInstance().getReference().child("registros").child("usuarios").child(telefono_bd);
             mData_usuario_detalle.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -202,8 +200,11 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                             } else {
                                 descuento = 0;
                             }
+
+
                         } else {
                             //no hay
+
                         }
                     }
                 }
@@ -291,11 +292,8 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
                                 String datetime = dateformat.format(c.getTime());
                                 String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                                 //End create date sebas
-                                indexServices += 1;
-                                mEditor.putString("telefono_s", telefono_bd + "-" + indexServices);
-                                mEditor.apply();
 
-                                DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd + "-" + indexServices);
+                                DatabaseReference servicio = FirebaseDatabase.getInstance().getReference().child(mCiudad).child("servicios").child(telefono_bd);
                                 HashMap<String, Object> registro = new HashMap<>();
                                 registro.put("nota", comentario);
                                 registro.put("destino", mExtra_destino);
@@ -345,35 +343,11 @@ public class pantalla_detalle extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-    int indexServices = 0;
-
-    private void readServices(String phone) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                .child(mCiudad)
-                .child("servicios");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        String key = ds.getKey();
-                        if (key.contains(phone)) {
-                            indexServices += 1;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
+
     }
 
 

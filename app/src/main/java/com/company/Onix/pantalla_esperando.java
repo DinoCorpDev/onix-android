@@ -24,6 +24,11 @@ import com.company.Onix.Adapter.mi_adapter_tres;
 import com.company.Onix.Modelos.mi_servicio_tres;
 import com.company.Onix.services.servicio_pantallas;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,6 +62,9 @@ public class pantalla_esperando extends AppCompatActivity {
     private DatabaseReference mData_postular;
     private Boolean Tutorial = false;
 
+    //variable ADS
+    private AdView mAdView;
+
     Handler handler = new Handler();
     int contador = 0;
     private String mEstado;
@@ -83,11 +91,17 @@ public class pantalla_esperando extends AppCompatActivity {
                         HashMap<String, Object> registro = new HashMap<>();
                         registro.put("estado", "esperando");
                         mData.updateChildren(registro);
+
                         handler.removeCallbacks(runnable);
                     }
                 }
+
+
             }
+
         }
+
+
     };
 
     @Override
@@ -98,9 +112,20 @@ public class pantalla_esperando extends AppCompatActivity {
         escucuchar_alertas();
 
         mPref = getApplicationContext().getSharedPreferences("sessiones", MODE_PRIVATE);
-        String telefono_bd = mPref.getString("telefono_s", "");
+        String telefono_bd = mPref.getString("telefono", "");
         String nombre = mPref.getString("nombre", "");
         ciudad = mPref.getString("mi_ciudad", "");
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        // Funcion google ADS
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         if (!telefono_bd.equals("")) {
 
@@ -235,10 +260,7 @@ public class pantalla_esperando extends AppCompatActivity {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(linearLayoutManager);
 
-            Query query = FirebaseDatabase.getInstance().getReference()
-                    .child(ciudad)
-                    .child("postulaciones")
-                    .child(telefono_bd)
+            Query query = FirebaseDatabase.getInstance().getReference().child(ciudad).child("postulaciones").child(telefono_bd)
                     .child("tabla_aceptados")
                     .orderByChild("km_reales")
                     .startAt(0.0);
@@ -259,7 +281,7 @@ public class pantalla_esperando extends AppCompatActivity {
                             }
                         });
                     } else {
-                       mVentana_encima.setVisibility(View.VISIBLE);
+                        mVentana_encima.setVisibility(View.VISIBLE);
                     }
                 }
 

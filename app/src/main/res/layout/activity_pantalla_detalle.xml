@@ -14,7 +14,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="250dp" />
+         />
 
     <com.github.florent37.shapeofview.shapes.BubbleView
         android:layout_width="match_parent"
@@ -22,9 +22,10 @@
         app:shape_bubble_arrowHeight="15dp"
         app:shape_bubble_arrowWidth="15dp"
         app:shape_bubble_arrowPosition="top"
-        app:shape_bubble_borderRadius="20dp"
+        app:shape_bubble_borderRadius="50dp"
         android:layout_gravity="bottom"
-
+        android:elevation="70dp"
+        android:layout_margin="20dp"
         >
 
 
@@ -37,15 +38,12 @@
 
 
 
-
-
-
             <LinearLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:gravity="top"
@@ -60,11 +58,12 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="35dp"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="65dp"
-                        android:layout_height="100dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:src="@drawable/ic_moto_servicio"/>
                     <TextView
                         android:gravity="center"
@@ -135,6 +134,45 @@
                         android:layout_weight="1">
 
                         <LinearLayout
+                            android:id="@+id/cuadro_bono"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:layout_marginBottom="5dp"
+                            android:layout_gravity="right|bottom"
+                            android:background="@drawable/botones_redondos"
+                            android:backgroundTint="@color/purple_200"
+                            android:visibility="visible"
+
+
+                            >
+
+                            <TextView
+                                android:id="@+id/btn_regalo"
+                                android:layout_height="wrap_content"
+                                android:textSize="18dp"
+                                android:layout_width="wrap_content"
+                                android:backgroundTint="@color/color_blanco"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/black"
+                                android:text="Bono: $"
+                                />
+
+                            <TextView
+                                android:id="@+id/mi_bono"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:layout_gravity="center"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:text="0"/>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -153,9 +191,6 @@
                         </LinearLayout>
 
 
-
-
-
                         <TextView
                             android:id="@+id/minutos_distancia"
                             android:layout_width="wrap_content"
@@ -164,69 +199,11 @@
                             android:layout_marginLeft="42dp"
                             android:textSize="16sp"/>
 
-                        <LinearLayout
-                            android:layout_marginTop="10dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icono_ubicar_dos"/>
-                            <TextView
-                                android:layout_gravity="left"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginTop="0dp"
-                                android:id="@+id/origen_detalle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/black"
-                                android:text="cargando"
-
-                                android:maxLines="1"
-                                android:textSize="14sp"/>
-
-
-                        </LinearLayout>
-
-
-
-                        <LinearLayout
-                            android:layout_marginTop="10dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/icon_final"/>
-                            <TextView
-                                android:layout_gravity="left"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginTop="0dp"
-                                android:id="@+id/destino_detalle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:text="cargando"
-
-                                android:maxLines="1"
-                                android:textSize="14sp"/>
-
-
-                        </LinearLayout>
-
-
-
 
                         <TextView
                             android:textSize="12dp"
                             android:textColor="@color/black"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginBottom="-10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -249,8 +226,9 @@
                                 android:id="@+id/cliente_precio"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:hint="Precio en pesos "
                                 android:inputType="number"
-                                android:hint="Precio en pesos "/>
+                                tools:ignore="TouchTargetSizeCheck" />
 
                         </LinearLayout>
 
@@ -280,43 +258,16 @@
                                 android:id="@+id/cliente_comentario"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:hint="Comentario"
                                 android:inputType="text"
-                                android:hint="Comentario"/>
+                                tools:ignore="TouchTargetSizeCheck" />
 
                         </LinearLayout>
 
                     </LinearLayout>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 </LinearLayout>
-
-
-
-
-
-
-
-
 
 
             </LinearLayout>
@@ -326,10 +277,9 @@
                 android:id="@+id/btn_solicitar_servicio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
                 android:layout_marginBottom="15dp"
-                android:layout_marginTop="10dp"
 
                 android:text="SOLICITAR"
                 android:enabled="false"
@@ -357,51 +307,79 @@
         android:layout_height="45dp"
         android:src="@drawable/ic_flecha_atras_negra"
         android:layout_gravity="left|top"
-        app:civ_border_width="3dp"
-        app:civ_border_color="#F0F0F0"
+        android:elevation="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="15dp"/>
 
-    <LinearLayout
-        android:id="@+id/cuadro_bono"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_gravity="right|top"
-        android:background="@drawable/botones_redondos"
-        android:backgroundTint="@color/color_blanco"
-        android:layout_marginTop="25sp"
-        android:layout_marginRight="10dp"
-        android:visibility="invisible"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:contentPadding="10dp"
+        app:cardBackgroundColor="@color/color_blanco"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="70dp">
 
-
-        >
-
-        <TextView
-            android:id="@+id/btn_regalo"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:layout_width="wrap_content"
-            android:backgroundTint="@color/color_blanco"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:text="Mi bono: "
-            />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/mi_bono"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icono_ubicar_dos"/>
+            <TextView
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="0dp"
+                android:id="@+id/origen_detalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="cargando"
+
+                android:maxLines="1"
+                android:textSize="14sp"/>
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:textStyle="bold"
+            android:orientation="horizontal">
 
-            android:text="0 $"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="21dp"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_final"/>
+            <TextView
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="0dp"
+                android:id="@+id/destino_detalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="cargando"
+
+                android:maxLines="1"
+                android:textSize="14sp"/>
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
 
 
 
